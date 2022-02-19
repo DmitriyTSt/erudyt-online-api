@@ -1,0 +1,36 @@
+package ru.erudyt.online.config
+
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Configuration
+import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import ru.erudyt.online.config.jwt.JwtAuthenticationEntryPoint
+import ru.erudyt.online.config.jwt.JwtAuthorizationFilter
+
+@Configuration
+@EnableWebSecurity
+class SecurityConfig @Autowired constructor(
+    private val jwtAuthorizationFilter: JwtAuthorizationFilter,
+    private val jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint,
+) : WebSecurityConfigurerAdapter() {
+
+    override fun configure(http: HttpSecurity) {
+        http.csrf().disable()
+            .authorizeRequests()
+            .antMatchers("/api/auth/anonym").permitAll()
+            .antMatchers("/api/auth/refresh").permitAll()
+            .antMatchers("/api/**").authenticated()
+            .anyRequest().permitAll()
+            .and()
+            .exceptionHandling()
+            .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+            .and()
+            .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+            .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter::class.java)
+    }
+}
