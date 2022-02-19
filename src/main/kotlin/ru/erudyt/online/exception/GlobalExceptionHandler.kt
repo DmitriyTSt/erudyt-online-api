@@ -47,8 +47,9 @@ class GlobalExceptionHandler @Autowired constructor(
     override fun handleExceptionInternal(
         ex: Exception, body: Any?, headers: HttpHeaders, status: HttpStatus, request: WebRequest
     ): ResponseEntity<Any?> {
+        ex.printStackTrace()
         return ResponseEntity.status(status).body(
-            ErrorResponse(ErrorDTO("INTERNAL_EXCEPTION", "Извините, что-то пошло не так"))
+            ErrorResponse(ErrorDTO("INTERNAL_EXCEPTION", "Извините, что-то пошло не так", ex.message))
         )
     }
 }

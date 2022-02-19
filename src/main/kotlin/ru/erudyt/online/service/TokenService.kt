@@ -13,7 +13,7 @@ import ru.erudyt.online.dto.enums.Os
 import ru.erudyt.online.dto.enums.getException
 import ru.erudyt.online.dto.model.Token
 import ru.erudyt.online.entity.api.TokenPairEntity
-import ru.erudyt.online.repository.TokenPairRepository
+import ru.erudyt.online.repository.api.TokenPairRepository
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.Date
@@ -21,8 +21,8 @@ import java.util.Date
 @Service
 @EnableConfigurationProperties(JwtSettings::class)
 class TokenService @Autowired constructor(
-    private val repository: TokenPairRepository,
-    private val jwtSettings: JwtSettings,
+	private val repository: TokenPairRepository,
+	private val jwtSettings: JwtSettings,
 ) {
     @Transactional
     fun createToken(userId: Long, deviceId: String, isAnonym: Boolean, os: Os): Token {

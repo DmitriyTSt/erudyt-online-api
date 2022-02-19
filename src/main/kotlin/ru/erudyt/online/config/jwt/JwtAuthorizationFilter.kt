@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 import ru.erudyt.online.config.property.JwtSettings
 import ru.erudyt.online.entity.api.TokenPairEntity
-import ru.erudyt.online.repository.TokenPairRepository
+import ru.erudyt.online.repository.api.TokenPairRepository
 import java.time.LocalDateTime
 import java.util.Date
 import java.util.concurrent.atomic.AtomicReference
@@ -20,8 +20,8 @@ import javax.servlet.http.HttpServletResponse
 @Component
 @EnableConfigurationProperties(JwtSettings::class)
 class JwtAuthorizationFilter @Autowired constructor(
-    private val jwtSettings: JwtSettings,
-    private val tokenPairRepository: TokenPairRepository,
+	private val jwtSettings: JwtSettings,
+	private val tokenPairRepository: TokenPairRepository,
 ) : OncePerRequestFilter() {
 
     companion object {

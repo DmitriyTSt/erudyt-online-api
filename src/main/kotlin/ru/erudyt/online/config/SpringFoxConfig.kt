@@ -21,7 +21,7 @@ class SpringFoxConfig {
             .securityContexts(listOf(securityContext()))
             .securitySchemes(listOf(ApiKey("JWT", JwtAuthorizationFilter.AUTHORIZATION, "header")))
             .select()
-            .apis(RequestHandlerSelectors.basePackage("ru.dmitriyt"))
+            .apis(RequestHandlerSelectors.basePackage("ru.erudyt.online"))
             .paths(PathSelectors.any())
             .build()
     }

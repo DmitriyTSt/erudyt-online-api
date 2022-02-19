@@ -1,10 +1,11 @@
 package ru.erudyt.online.service
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import ru.erudyt.online.entity.resource.UserEntity
-import ru.erudyt.online.repository.UserProfileRepository
+import ru.erudyt.online.repository.resource.UserProfileRepository
 
 @Service
 class UserService @Autowired constructor(
@@ -21,7 +22,7 @@ class UserService @Autowired constructor(
     }
 
     fun findByLogin(login: String): UserEntity? {
-        return repository.findByLogin(login)
+        return repository.findByUsername(login)
     }
 
     fun findByLoginAndPassword(login: String, password: String): UserEntity? {

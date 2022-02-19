@@ -1,5 +1,6 @@
 package ru.erudyt.online.entity.resource
 
+import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
@@ -7,11 +8,13 @@ import javax.persistence.Id
 import javax.persistence.Table
 
 @Entity
-@Table(name = "users")
+@Table(name = "tl_member")
 class UserEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     val id: Long = 0,
-    val login: String,
+    @Column(name = "firstname") val firstName: String,
+    @Column(name = "lastname") val lastName: String,
+    val username: String,
     var password: String,
 )
