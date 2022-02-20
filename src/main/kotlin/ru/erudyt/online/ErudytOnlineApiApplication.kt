@@ -2,6 +2,7 @@ package ru.erudyt.online
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import ru.erudyt.online.mapper.SerializedPhpParser
 import springfox.documentation.swagger2.annotations.EnableSwagger2
 
 @SpringBootApplication
