@@ -16,7 +16,7 @@ class CompetitionItem(
 	val dateSend: Long,
 	val useStatus: String,
 	val status: String,
-	val icon: String,
+	val icon: String?,
 	val useRules: String,
 	val rules: String?,
 	val subjects: List<String>,

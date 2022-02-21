@@ -8,6 +8,7 @@ import ru.erudyt.online.dto.enums.getException
 import ru.erudyt.online.dto.model.CompetitionFilter
 import ru.erudyt.online.dto.model.CompetitionFilterResponse
 import ru.erudyt.online.dto.model.CompetitionItem
+import ru.erudyt.online.entity.resource.CompetitionItemEntity
 import ru.erudyt.online.mapper.CompetitionItemMapper
 import ru.erudyt.online.repository.resource.CompetitionItemRepository
 import ru.erudyt.online.repository.resource.CustomCompetitionItemRepository
@@ -15,6 +16,7 @@ import ru.erudyt.online.repository.resource.CustomCompetitionItemRepository
 @Service
 class CompetitionItemService @Autowired constructor(
     private val filterItemService: FilterItemService,
+    private val fileService: FileService,
     private val customItemRepository: CustomCompetitionItemRepository,
     private val itemRepository: CompetitionItemRepository,
     private val mapper: CompetitionItemMapper,
@@ -45,7 +47,7 @@ class CompetitionItemService @Autowired constructor(
             null
         }
         return CompetitionFilterResponse(
-            list = items.map { mapper.fromEntityToModel(it) },
+            list = items.map { fromEntityToModel(it) },
             hasMore = offset + limit < total,
             filters = filters
         )
@@ -53,7 +55,14 @@ class CompetitionItemService @Autowired constructor(
 
     fun getItem(id: Long): CompetitionItem {
         return itemRepository.findByIdOrNull(id)
-            ?.let { mapper.fromEntityToModel(it) }
+            ?.let { fromEntityToModel(it) }
             ?: throw ApiError.NOT_FOUND.getException()
+    }
+
+    private fun fromEntityToModel(entity: CompetitionItemEntity): CompetitionItem {
+        return mapper.fromEntityToModel(
+            model = entity,
+            imagePath = fileService.findImagePathByUuid(entity.icon)
+        )
     }
 }
