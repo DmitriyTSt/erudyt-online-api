@@ -1,11 +1,11 @@
 api.datasource.jdbcUrl=jdbc:mysql://localhost:3306/erudyt_api
-api.datasource.username=db_user
-api.datasource.password=1234
+api.datasource.username=
+api.datasource.password=
 api.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 
 resource.datasource.jdbcUrl=jdbc:mysql://localhost:3306/erudyt_resource
-resource.datasource.username=db_user
-resource.datasource.password=1234
+resource.datasource.username=
+resource.datasource.password=
 resource.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 
 spring.mvc.pathmatch.matching-strategy=ANT_PATH_MATCHER
