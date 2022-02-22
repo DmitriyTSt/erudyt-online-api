@@ -13,6 +13,7 @@ enum class ApiError(
     TOKEN_BELONGS_ANONYM("Access token принадлежит анонимному пользователю"),
     ANONYM_NOT_EXISTS("Анонимный профиль не существует или не активный"),
     AUTH_ERROR("Неверная пара логин/пароль"),
+    NOT_FOUND("Объект не найден")
 
 }
 
