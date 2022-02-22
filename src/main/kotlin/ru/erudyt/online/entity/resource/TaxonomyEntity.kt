@@ -7,7 +7,7 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "tl_comp_taxonomy")
-class FilterItemEntity(
+class TaxonomyEntity(
     @Id val id: Long,
     @Column(name = "pid") val type: Int,
     val title: String,
@@ -16,7 +16,7 @@ class FilterItemEntity(
     val tstamp: Long,
     val useGroup: String,
     val groupPostfix: String,
-    val groupIndex: Long,
+    val groupIndex: Int,
     val annotation: String?,
     val pageTitle: String,
     val showInMenu: String,

@@ -4,7 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import ru.erudyt.online.dto.model.CompetitionItem
 import ru.erudyt.online.dto.model.CompetitionItemShort
+import ru.erudyt.online.dto.model.TestAgeGroup
 import ru.erudyt.online.entity.resource.CompetitionItemEntity
+
+private val P_CONTENT_REGEX = "<p((?!>).)+>(((?!<).)+)</p>".toRegex()
+private val LI_CONTENT_REGEX = "<li((?!>).)+>(((?!<\\\\).)+)</li>".toRegex()
 
 @Component
 class CompetitionItemMapper @Autowired constructor(
@@ -17,60 +21,60 @@ class CompetitionItemMapper @Autowired constructor(
             title = entity.shortTitle,
             subject = entity.shortSubj,
             ages = entity.age,
+            difficulty = entity.stars,
             icon = imageMapper.fromPathToUrl(imagePath),
         )
     }
 
-    fun fromEntityToModel(model: CompetitionItemEntity, imagePath: String?): CompetitionItem {
+    fun fromEntityToModel(
+        entity: CompetitionItemEntity,
+        imagePath: String?,
+        testAgeGroups: List<TestAgeGroup>,
+    ): CompetitionItem {
+        val (description, infos) = separateDescriptionAndInfos(entity.description)
         return CompetitionItem(
-            id = model.id,
-            pid = model.pid,
-            title = model.title,
-            stars = model.stars,
-            published = model.published,
-            annotation = model.annotation,
-            description = model.description,
-            winner = model.winner,
-            useDate = model.useDate,
-            dateStart = model.dateStart,
-            dateEnd = model.dateEnd,
-            dateSum = model.dateSum,
-            dateSend = model.dateSend,
-            useStatus = model.useStatus,
-            status = model.status,
+            id = entity.id,
+            title = entity.title,
+            difficulty = entity.stars,
             icon = imageMapper.fromPathToUrl(imagePath),
-            useRules = model.useRules,
-            rules = model.rules,
-            subjects = parseSubjects(model.subjectBlob),
-            ageGroups = parseAgeGroups(model.ageGroupsBlob),
-            tests = parseTests(model.charIdsBlob),
-            cost = model.cost,
-            contestFilesBlob = model.contestFilesBlob,
-            sorting = model.sorting,
-            tstamp = model.tstamp,
-            shortTitle = model.shortTitle,
-            shortSubj = model.shortSubj,
-            age = model.age,
+            annotation = entity.annotation,
+            description = description,
+            tests = testAgeGroups,
+            infos = infos,
         )
     }
 
-    private fun parseSubjects(blob: String): List<String> {
+    private fun separateDescriptionAndInfos(rawDescription: String?): Pair<String?, List<String>> {
+        if (rawDescription == null) return null to emptyList()
+        val pContents = P_CONTENT_REGEX.findAll(rawDescription).toList()
+            .mapNotNull { it.groupValues.toList().getOrNull(2) }
+        val description = if (pContents.isEmpty()) {
+            ""
+        } else {
+            pContents.subList(0, pContents.lastIndex.takeIf { it >= 0 } ?: 0).joinToString("\n")
+        }
+        val infos = LI_CONTENT_REGEX.findAll(rawDescription).toList()
+            .mapNotNull { it.groupValues.toList().getOrNull(2) }
+        return description to infos
+    }
+
+    fun parseSubjects(blob: String): List<String> {
         return (SerializedPhpParser(blob).parse() as Map<*, *>).values.map { it as String }
     }
 
-    private fun parseAgeGroups(blob: String): List<String> {
+    fun parseAgeGroups(blob: String): List<String> {
         return (SerializedPhpParser(blob).parse() as Map<*, *>).values.map { it as String }
     }
 
-    private fun parseTests(blob: String): List<CompetitionItem.Test> {
+    fun parseTests(blob: String): List<CompetitionItem.RawTest> {
         return (SerializedPhpParser(blob).parse() as Map<*, *>).values
             .map { parseTest(it as Map<*, *>) }
     }
 
-    private fun parseTest(map: Map<*, *>): CompetitionItem.Test {
-        return CompetitionItem.Test(
+    private fun parseTest(map: Map<*, *>): CompetitionItem.RawTest {
+        return CompetitionItem.RawTest(
             map["charid"] as String,
-            (map["value"] as Map<*, *>).values.map { it as String }
+            (map["value"] as Map<*, *>).values.map { it as String }.map { it.toLong() }
         )
     }
 }
