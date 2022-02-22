@@ -8,6 +8,7 @@ import ru.erudyt.online.dto.enums.getException
 import ru.erudyt.online.dto.model.CompetitionFilter
 import ru.erudyt.online.dto.model.CompetitionFilterResponse
 import ru.erudyt.online.dto.model.CompetitionItem
+import ru.erudyt.online.dto.model.CompetitionItemShort
 import ru.erudyt.online.entity.resource.CompetitionItemEntity
 import ru.erudyt.online.mapper.CompetitionItemMapper
 import ru.erudyt.online.repository.resource.CompetitionItemRepository
@@ -34,7 +35,7 @@ class CompetitionItemService @Autowired constructor(
             ageIds,
             subjectIds,
             offset,
-            limit
+            limit,
         )
         val filters = if (offset == 0L) {
             CompetitionFilter(
@@ -47,7 +48,7 @@ class CompetitionItemService @Autowired constructor(
             null
         }
         return CompetitionFilterResponse(
-            list = items.map { fromEntityToModel(it) },
+            list = items.map { fromEntityToModelShort(it) },
             hasMore = offset + limit < total,
             filters = filters
         )
@@ -57,6 +58,13 @@ class CompetitionItemService @Autowired constructor(
         return itemRepository.findByIdOrNull(id)
             ?.let { fromEntityToModel(it) }
             ?: throw ApiError.NOT_FOUND.getException()
+    }
+
+    private fun fromEntityToModelShort(entity: CompetitionItemEntity): CompetitionItemShort {
+        return mapper.fromEntityToModelShort(
+            entity = entity,
+            imagePath = fileService.findImagePathByUuid(entity.icon)
+        )
     }
 
     private fun fromEntityToModel(entity: CompetitionItemEntity): CompetitionItem {

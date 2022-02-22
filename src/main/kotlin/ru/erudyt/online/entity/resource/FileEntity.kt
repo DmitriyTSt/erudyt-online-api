@@ -10,7 +10,7 @@ class FileEntity(
     @Id val id: Long,
     val pid: String,
     val tstamp: Long,
-    val uuid: ByteArray,
+    val uuid: String,
     val type: String,
     val path: String,
     val extension: String,

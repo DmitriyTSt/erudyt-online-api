@@ -40,6 +40,9 @@ class CustomCompetitionItemRepositoryImpl @Autowired constructor(
             predicates.add(cb.like(titlePath, "%$searchQuery%"))
         }
 
+        val publishedPath = item.get<String>("published")
+        predicates.add(cb.equal(publishedPath, "1"))
+
         query.select(item).apply {
             if (predicates.isNotEmpty()) {
                 where(cb.or(*predicates.toTypedArray()))

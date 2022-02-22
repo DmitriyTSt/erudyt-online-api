@@ -1,11 +1,25 @@
 package ru.erudyt.online.mapper
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import ru.erudyt.online.dto.model.CompetitionItem
+import ru.erudyt.online.dto.model.CompetitionItemShort
 import ru.erudyt.online.entity.resource.CompetitionItemEntity
 
 @Component
-class CompetitionItemMapper {
+class CompetitionItemMapper @Autowired constructor(
+    private val imageMapper: ImageMapper,
+) {
+
+    fun fromEntityToModelShort(entity: CompetitionItemEntity, imagePath: String?): CompetitionItemShort {
+        return CompetitionItemShort(
+            id = entity.id,
+            title = entity.shortTitle,
+            subject = entity.shortSubj,
+            ages = entity.age,
+            icon = imageMapper.fromPathToUrl(imagePath),
+        )
+    }
 
     fun fromEntityToModel(model: CompetitionItemEntity, imagePath: String?): CompetitionItem {
         return CompetitionItem(
@@ -24,7 +38,7 @@ class CompetitionItemMapper {
             dateSend = model.dateSend,
             useStatus = model.useStatus,
             status = model.status,
-            icon = imagePath,
+            icon = imageMapper.fromPathToUrl(imagePath),
             useRules = model.useRules,
             rules = model.rules,
             subjects = parseSubjects(model.subjectBlob),

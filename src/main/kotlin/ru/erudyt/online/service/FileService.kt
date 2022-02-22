@@ -8,7 +8,7 @@ import ru.erudyt.online.repository.resource.FileEntityRepository
 class FileService @Autowired constructor(
     private val repository: FileEntityRepository,
 ) {
-    fun findImagePathByUuid(uuid: ByteArray): String? {
+    fun findImagePathByUuid(uuid: String): String? {
         return repository.findByUuid(uuid)?.path
     }
 }
