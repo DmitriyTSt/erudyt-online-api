@@ -35,7 +35,9 @@ class CompetitionItemMapper @Autowired constructor(
         val (description, infos) = separateDescriptionAndInfos(entity.description)
         return CompetitionItem(
             id = entity.id,
-            title = entity.title,
+            title = entity.shortTitle,
+            subject = entity.shortSubj,
+            ages = entity.age,
             difficulty = entity.stars,
             icon = imageMapper.fromPathToUrl(imagePath),
             annotation = entity.annotation,
