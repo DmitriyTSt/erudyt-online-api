@@ -15,6 +15,7 @@ class UserEntity(
     val id: Long = 0,
     @Column(name = "firstname") val firstName: String,
     @Column(name = "lastname") val lastName: String,
+    @Column(name = "middlename") val middleName: String,
     val username: String,
     var password: String,
     val email: String,

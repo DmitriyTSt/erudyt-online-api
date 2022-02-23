@@ -6,8 +6,10 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import ru.erudyt.online.dto.enums.ApiError
 import ru.erudyt.online.dto.enums.getException
+import ru.erudyt.online.dto.model.User
 import ru.erudyt.online.entity.api.TokenPairEntity
 import ru.erudyt.online.entity.resource.UserEntity
+import ru.erudyt.online.mapper.UserMapper
 import ru.erudyt.online.repository.resource.UserProfileRepository
 
 @Service
@@ -15,6 +17,7 @@ class UserService @Autowired constructor(
     private val repository: UserProfileRepository,
     private val passwordEncoder: PasswordEncoder,
     private val tokenService: TokenService,
+    private val mapper: UserMapper,
 ) {
     fun create(userEntity: UserEntity): UserEntity {
         userEntity.password = passwordEncoder.encode(userEntity.password)
@@ -36,10 +39,17 @@ class UserService @Autowired constructor(
 
     fun getCurrentUser(_currentToken: TokenPairEntity? = null): UserEntity {
         val currentToken = _currentToken ?: tokenService.getCurrentTokenPair()
+        if (currentToken.isAnonym) {
+            throw ApiError.TOKEN_BELONGS_ANONYM.getException()
+        }
         return repository.findByIdOrNull(currentToken.userId) ?: throw ApiError.NOT_FOUND.getException()
     }
 
-    fun getUsers(): List<UserEntity> {
-        return repository.findAll()
+    fun getUsers(): List<User> {
+        return repository.findAll().map { mapper.fromEntityToModel(it) }
+    }
+
+    fun getProfile(): User {
+        return getCurrentUser().let { mapper.fromEntityToModel(it) }
     }
 }
