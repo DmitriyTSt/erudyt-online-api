@@ -14,21 +14,20 @@ private const val WINNER_PLACE_FULL = "III"
 class ResultMapper @Autowired constructor(
     private val imageMapper: ImageMapper,
 ) {
-    fun fromEntityToCommonModel(entity: ResultEntity): CommonResultRow {
+    fun fromEntityToCommonModel(entity: ResultEntity, competitionId: Long?): CommonResultRow {
         val (_, resultText) = getResultStatusToText(entity.place)
         return CommonResultRow(
             date = entity.date,
             username = entity.name,
             city = entity.city,
             countryIcon = imageMapper.fromCountryToImage(entity.country),
-            competitionId = 0,
+            competitionId = competitionId,
             competitionTitle = entity.competitionTitle,
             resultText = resultText,
         )
     }
 
     fun fromEntityToUserModel(entity: ResultEntity): UserResultRow {
-        val (status, _) = getResultStatusToText(entity.place)
         return UserResultRow(
             id = entity.id,
             date = entity.date,

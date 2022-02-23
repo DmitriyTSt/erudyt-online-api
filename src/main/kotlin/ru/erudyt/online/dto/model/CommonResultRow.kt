@@ -5,7 +5,7 @@ class CommonResultRow(
     val username: String,
     val city: String,
     val countryIcon: String?,
-    val competitionId: Long,
+    val competitionId: Long?,
     val competitionTitle: String,
     val resultText: String,
 )

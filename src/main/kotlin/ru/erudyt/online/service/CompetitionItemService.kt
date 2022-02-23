@@ -72,6 +72,16 @@ class CompetitionItemService @Autowired constructor(
         return fromEntityToModel(entity)
     }
 
+    fun getCodesMap(): Map<String, Long> {
+        val result = mutableMapOf<String, Long>()
+        itemRepository.findAll().map { it.id to mapper.parseTests(it.charIdsBlob) }.forEach { (id, rawTests) ->
+            rawTests.forEach { rawTest ->
+                result[rawTest.id] = id
+            }
+        }
+        return result
+    }
+
     private fun fromEntityToModelShort(entity: CompetitionItemEntity): CompetitionItemShort {
         return mapper.fromEntityToModelShort(
             entity = entity,

@@ -20,10 +20,12 @@ class CompetitionResultService @Autowired constructor(
     private val resultRepository: ResultRepository,
     private val resultMapper: ResultMapper,
     private val tokenService: TokenService,
+    private val competitionItemService: CompetitionItemService,
 ) {
     fun getCommonResult(offset: Int, limit: Int): ListResponse<CommonResultRow> {
+        val codesMap = competitionItemService.getCodesMap()
         val page = resultRepository.findAllByNameNotOrderByIdDesc(pageable = getPagination(offset, limit))
-            .map { resultMapper.fromEntityToCommonModel(it) }
+            .map { resultMapper.fromEntityToCommonModel(it, codesMap[it.code]) }
         return ListResponse(page.toList(), page.totalElements > offset + limit)
     }
 
