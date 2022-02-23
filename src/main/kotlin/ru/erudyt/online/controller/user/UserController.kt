@@ -7,16 +7,23 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import ru.erudyt.online.controller.base.BaseResponse
-import ru.erudyt.online.entity.resource.UserEntity
+import ru.erudyt.online.controller.base.ListResponse
+import ru.erudyt.online.dto.model.User
+import ru.erudyt.online.dto.response.ProfileResponse
 import ru.erudyt.online.service.UserService
 
 @RestController
-@RequestMapping("/api/user", produces = [MediaType.APPLICATION_JSON_VALUE])
+@RequestMapping("/api/", produces = [MediaType.APPLICATION_JSON_VALUE])
 class UserController @Autowired constructor(
     private val userService: UserService,
 ) {
-    @GetMapping("/")
-    fun getUsers(): ResponseEntity<BaseResponse<List<UserEntity>>> {
-        return ResponseEntity.ok(BaseResponse(userService.getUsers()))
+    @GetMapping("users")
+    fun getUsers(): ResponseEntity<ListResponse<User>> {
+        return ResponseEntity.ok(ListResponse(userService.getUsers()))
+    }
+
+    @GetMapping("profile")
+    fun getProfile(): ResponseEntity<BaseResponse<ProfileResponse>> {
+        return ResponseEntity.ok(BaseResponse(ProfileResponse(userService.getProfile())))
     }
 }
