@@ -62,7 +62,7 @@ class ResultMapper @Autowired constructor(
         return if (place > 0) {
             if (place < 4) {
                 ResultStatus.valueOf("WINNER_${place}") to
-                        "Победитель (${WINNER_PLACE_FULL.substring(0, place)} место"
+                        "Победитель (${WINNER_PLACE_FULL.substring(0, place)} место)"
             } else {
                 ResultStatus.PRIZE to "Призёр ($place место)"
             }

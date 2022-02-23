@@ -31,7 +31,7 @@ class CompetitionController @Autowired constructor(
                     request.ageIds.orEmpty(),
                     request.subjectIds.orEmpty(),
                     request.offset ?: 0,
-                    request.limit ?: 10
+                    request.limit ?: 10,
                 )
             )
         )
