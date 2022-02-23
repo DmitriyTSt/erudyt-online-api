@@ -20,18 +20,18 @@ class ResultController @Autowired constructor(
 
     @GetMapping("results")
     fun getCommonResults(
-        @RequestParam offset: Int? = null,
-        @RequestParam limit: Int? = null,
+        @RequestParam(required = false) offset: Int?,
+        @RequestParam(required = false) limit: Int?,
     ): ResponseEntity<ListResponse<CommonResultRow>> {
         return ResponseEntity.ok(resultService.getCommonResult(offset ?: 0, limit ?: 10))
     }
 
     @GetMapping("user/results")
     fun getUserResults(
-        @RequestParam email: String?,
-        @RequestParam query: String?,
-        @RequestParam offset: Int?,
-        @RequestParam limit: Int?,
+        @RequestParam(required = false) email: String?,
+        @RequestParam(required = false) query: String?,
+        @RequestParam(required = false) offset: Int?,
+        @RequestParam(required = false) limit: Int?,
     ): ResponseEntity<ListResponse<UserResultRow>> {
         return ResponseEntity.ok(resultService.getAnonOrUserResults(email, query, offset ?: 0, limit ?: 10))
     }
