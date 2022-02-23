@@ -32,6 +32,7 @@ dependencies {
 
     implementation("io.jsonwebtoken:jjwt:0.9.1")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
+    implementation("com.google.code.gson:gson:2.9.0")
 
     runtimeOnly("mysql:mysql-connector-java:8.0.25")
 
