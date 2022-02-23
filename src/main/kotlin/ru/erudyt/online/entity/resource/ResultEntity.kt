@@ -13,7 +13,7 @@ class ResultEntity(
     val paid: String,
     val code: String,
     val place: Int,
-    @Column(name = "konkurs") val competition: String,
+    @Column(name = "konkurs") val competitionTitle: String,
     val name: String,
     val email: String,
     val school: String,
