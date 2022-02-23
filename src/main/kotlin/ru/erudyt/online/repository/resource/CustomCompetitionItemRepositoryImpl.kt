@@ -20,6 +20,8 @@ class CustomCompetitionItemRepositoryImpl @Autowired constructor(
         searchQuery: String?,
         ageIds: List<Long>,
         subjectIds: List<Long>,
+        difficulty: Int?,
+        notContainCodes: List<String>,
         pageable: Pageable,
     ): Page<CompetitionItemEntity> {
         val cb = entityManager.criteriaBuilder
@@ -28,18 +30,38 @@ class CustomCompetitionItemRepositoryImpl @Autowired constructor(
 
         val agePath = item.get<String>("ageGroupsBlob")
         val subjectPath = item.get<String>("subjectBlob")
+        val charIdsPath = item.get<String>("charIdsBlob")
 
-        val predicates = mutableListOf<Predicate>()
+        val predicatesAges = mutableListOf<Predicate>()
+        val predicatesSubjects = mutableListOf<Predicate>()
+        val predicatesAnd = mutableListOf<Predicate>()
 
         ageIds.forEach { ageId ->
-            predicates.add(cb.like(agePath, "%$ageId%"))
+            predicatesAges.add(cb.or(cb.like(agePath, "%$ageId%")))
         }
         subjectIds.forEach { subjectId ->
-            predicates.add(cb.like(subjectPath, "%$subjectId%"))
+            predicatesSubjects.add(cb.or(cb.like(subjectPath, "%$subjectId%")))
+        }
+        notContainCodes.forEach { code ->
+            predicatesAnd.add(cb.notLike(charIdsPath, "%$code%"))
         }
         if (searchQuery != null) {
             val titlePath = item.get<String>("title")
-            predicates.add(cb.like(titlePath, "%$searchQuery%"))
+            predicatesAnd.add(cb.like(titlePath, "%$searchQuery%"))
+        }
+        if (difficulty != null) {
+            val starsPath = item.get<Int>("stars")
+            predicatesAnd.add(cb.equal(starsPath, difficulty))
+        }
+        val predicates = mutableListOf<Predicate>()
+        if (predicatesAges.isNotEmpty()) {
+            predicates.add(cb.and(*predicatesAges.toTypedArray()))
+        }
+        if (predicatesSubjects.isNotEmpty()) {
+            predicates.add(cb.and(*predicatesSubjects.toTypedArray()))
+        }
+        if (predicatesAnd.isNotEmpty()) {
+            predicates.add(cb.and(*predicatesAnd.toTypedArray()))
         }
 
         val publishedPath = item.get<String>("published")
@@ -47,7 +69,7 @@ class CustomCompetitionItemRepositoryImpl @Autowired constructor(
 
         query.select(item).apply {
             if (predicates.isNotEmpty()) {
-                where(cb.or(*predicates.toTypedArray()))
+                where(*predicates.toTypedArray())
             }
         }
 
@@ -62,11 +84,37 @@ class CustomCompetitionItemRepositoryImpl @Autowired constructor(
         val countItem = countQuery.from(CompetitionItemEntity::class.java)
         countQuery.select(cb.count(countItem)).apply {
             if (predicates.isNotEmpty()) {
-                where(cb.or(*predicates.toTypedArray()))
+                where(*predicates.toTypedArray())
             }
         }
         val count = entityManager.createQuery(countQuery).singleResult
 
         return PageImpl(list, pageable, count)
+    }
+
+    override fun findAllByCodes(codes: List<String>): List<CompetitionItemEntity> {
+        if (codes.isEmpty()) {
+            return emptyList()
+        }
+
+        val cb = entityManager.criteriaBuilder
+        val query = cb.createQuery(CompetitionItemEntity::class.java)
+        val item = query.from(CompetitionItemEntity::class.java)
+
+        val charIdsPath = item.get<String>("charIdsBlob")
+
+        val predicates = mutableListOf<Predicate>()
+
+        codes.forEach { code ->
+            predicates.add(cb.like(charIdsPath, "%$code%"))
+        }
+
+        query.select(item).apply {
+            if (predicates.isNotEmpty()) {
+                where(cb.or(*predicates.toTypedArray()))
+            }
+        }
+
+        return entityManager.createQuery(query).resultStream.toList()
     }
 }

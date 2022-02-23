@@ -8,11 +8,11 @@ import ru.erudyt.online.dto.enums.ApiError
 import ru.erudyt.online.dto.enums.getException
 import ru.erudyt.online.dto.model.AgeGroup
 import ru.erudyt.online.dto.model.CompetitionFilter
-import ru.erudyt.online.dto.response.CompetitionFilterResponse
 import ru.erudyt.online.dto.model.CompetitionItem
 import ru.erudyt.online.dto.model.CompetitionItemShort
 import ru.erudyt.online.dto.model.OffsetBasedPageRequest
 import ru.erudyt.online.dto.model.TestAgeGroup
+import ru.erudyt.online.dto.response.CompetitionFilterResponse
 import ru.erudyt.online.entity.resource.CompetitionItemEntity
 import ru.erudyt.online.mapper.CompetitionItemMapper
 import ru.erudyt.online.repository.resource.CompetitionItemRepository
@@ -48,6 +48,8 @@ class CompetitionItemService @Autowired constructor(
             query,
             ageIds,
             subjectIds,
+            null,
+            emptyList(),
             OffsetBasedPageRequest(offset, limit, Sort.by(Sort.Direction.DESC, "id")),
         )
         val filters = if (offset == 0) {

@@ -1,15 +1,15 @@
 package ru.erudyt.online.dto.model
 
-sealed class MainSection {
+sealed class MainSection(
+    val type: MainSectionType
+) {
     class TaglineBlock(
         val taglines: List<Tagline>,
-        val type: MainSectionType = MainSectionType.TAGLINE,
-    )
+    ) : MainSection(MainSectionType.TAGLINE)
 
     class CompetitionItemsBlock(
         val title: String,
         val viewType: CompetitionViewType,
         val items: List<CompetitionItemShort>,
-        val type: MainSectionType = MainSectionType.COMPETITION_ITEMS,
-    )
+    ) : MainSection(MainSectionType.COMPETITION_ITEM)
 }
