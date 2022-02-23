@@ -8,7 +8,7 @@ import ru.erudyt.online.dto.enums.ApiError
 import ru.erudyt.online.dto.enums.getException
 import ru.erudyt.online.dto.model.AgeGroup
 import ru.erudyt.online.dto.model.CompetitionFilter
-import ru.erudyt.online.dto.model.CompetitionFilterResponse
+import ru.erudyt.online.dto.response.CompetitionFilterResponse
 import ru.erudyt.online.dto.model.CompetitionItem
 import ru.erudyt.online.dto.model.CompetitionItemShort
 import ru.erudyt.online.dto.model.OffsetBasedPageRequest
