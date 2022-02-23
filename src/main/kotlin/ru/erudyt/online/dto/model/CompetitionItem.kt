@@ -9,9 +9,4 @@ class CompetitionItem(
     val annotation: String?,
     val description: String?,
     val infos: List<String>,
-) {
-    class RawTest(
-        val id: String,
-        val value: List<Long>,
-    )
-}
+)
