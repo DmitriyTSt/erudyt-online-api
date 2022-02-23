@@ -3,6 +3,7 @@ package ru.erudyt.online.service
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import ru.erudyt.online.controller.base.ListResponse
 import ru.erudyt.online.dto.enums.ApiError
@@ -10,6 +11,7 @@ import ru.erudyt.online.dto.enums.getException
 import ru.erudyt.online.dto.model.CommonResultRow
 import ru.erudyt.online.dto.model.OffsetBasedPageRequest
 import ru.erudyt.online.dto.model.UserResultRow
+import ru.erudyt.online.dto.response.ResultResponse
 import ru.erudyt.online.entity.api.TokenPairEntity
 import ru.erudyt.online.mapper.ResultMapper
 import ru.erudyt.online.repository.resource.ResultRepository
@@ -20,6 +22,7 @@ class CompetitionResultService @Autowired constructor(
     private val resultRepository: ResultRepository,
     private val resultMapper: ResultMapper,
     private val tokenService: TokenService,
+    private val testService: TestService,
     private val competitionItemService: CompetitionItemService,
 ) {
     fun getCommonResult(offset: Int, limit: Int): ListResponse<CommonResultRow> {
@@ -39,13 +42,27 @@ class CompetitionResultService @Autowired constructor(
         }
     }
 
-    fun searchResults(email: String, offset: Int, limit: Int): ListResponse<UserResultRow> {
+    fun getResult(id: Long): ResultResponse {
+        val result = resultRepository.findByIdOrNull(id) ?: throw ApiError.NOT_FOUND.getException()
+        val test = testService.getRawTest(result.code)
+        return ResultResponse(
+            resultMapper.fromEntityToDetailModel(result, test)
+        )
+    }
+
+    /**
+     * Получение результатов по email
+     */
+    private fun searchResults(email: String, offset: Int, limit: Int): ListResponse<UserResultRow> {
         val page = resultRepository.findAllByEmail(email, getPagination(offset, limit))
             .map { resultMapper.fromEntityToUserModel(it) }
         return ListResponse(page.toList(), page.totalElements > offset + limit)
     }
 
-    fun getUserResults(
+    /**
+     * Получение результатов текущего пользователя
+     */
+    private fun getUserResults(
         currentToken: TokenPairEntity,
         query: String,
         offset: Int,

@@ -1,4 +1,7 @@
 package ru.erudyt.online.dto.response
 
-class ResultResponse {
-}
+import ru.erudyt.online.dto.model.UserResultDetail
+
+class ResultResponse(
+    val result: UserResultDetail,
+)
