@@ -3,6 +3,7 @@ package ru.erudyt.online.mapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import ru.erudyt.online.dto.model.CompetitionItem
+import ru.erudyt.online.dto.model.CompetitionItemRawTest
 import ru.erudyt.online.dto.model.CompetitionItemShort
 import ru.erudyt.online.dto.model.TestAgeGroup
 import ru.erudyt.online.entity.resource.CompetitionItemEntity
@@ -34,7 +35,9 @@ class CompetitionItemMapper @Autowired constructor(
         val (description, infos) = separateDescriptionAndInfos(entity.description)
         return CompetitionItem(
             id = entity.id,
-            title = entity.title,
+            title = entity.shortTitle,
+            subject = entity.shortSubj,
+            ages = entity.age,
             difficulty = entity.stars,
             icon = imageMapper.fromPathToUrl(imagePath),
             annotation = entity.annotation,
@@ -66,13 +69,13 @@ class CompetitionItemMapper @Autowired constructor(
         return (SerializedPhpParser(blob).parse() as Map<*, *>).values.map { it as String }
     }
 
-    fun parseTests(blob: String): List<CompetitionItem.RawTest> {
+    fun parseTests(blob: String): List<CompetitionItemRawTest> {
         return (SerializedPhpParser(blob).parse() as Map<*, *>).values
             .map { parseTest(it as Map<*, *>) }
     }
 
-    private fun parseTest(map: Map<*, *>): CompetitionItem.RawTest {
-        return CompetitionItem.RawTest(
+    private fun parseTest(map: Map<*, *>): CompetitionItemRawTest {
+        return CompetitionItemRawTest(
             map["charid"] as String,
             (map["value"] as Map<*, *>).values.map { it as String }.map { it.toLong() }
         )

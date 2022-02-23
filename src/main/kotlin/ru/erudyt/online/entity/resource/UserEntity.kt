@@ -16,5 +16,6 @@ class UserEntity(
     @Column(name = "firstname") val firstName: String,
     @Column(name = "lastname") val lastName: String,
     val username: String,
-    @Transient var password: String,
+    var password: String,
+    val email: String,
 )

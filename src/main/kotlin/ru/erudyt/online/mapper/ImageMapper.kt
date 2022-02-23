@@ -15,4 +15,10 @@ class ImageMapper @Autowired constructor(
         if (path == null) return null
         return "${imageSettings.baseUrl}$path"
     }
+
+    fun fromCountryToImage(country: String?): String? {
+        if (country == null) return null
+
+        return fromPathToUrl("files/flags/16/${country.uppercase()}.png")
+    }
 }

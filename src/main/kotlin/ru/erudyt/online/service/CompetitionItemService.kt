@@ -1,15 +1,17 @@
 package ru.erudyt.online.service
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import ru.erudyt.online.dto.enums.ApiError
 import ru.erudyt.online.dto.enums.getException
 import ru.erudyt.online.dto.model.AgeGroup
 import ru.erudyt.online.dto.model.CompetitionFilter
-import ru.erudyt.online.dto.model.CompetitionFilterResponse
+import ru.erudyt.online.dto.response.CompetitionFilterResponse
 import ru.erudyt.online.dto.model.CompetitionItem
 import ru.erudyt.online.dto.model.CompetitionItemShort
+import ru.erudyt.online.dto.model.OffsetBasedPageRequest
 import ru.erudyt.online.dto.model.TestAgeGroup
 import ru.erudyt.online.entity.resource.CompetitionItemEntity
 import ru.erudyt.online.mapper.CompetitionItemMapper
@@ -39,17 +41,16 @@ class CompetitionItemService @Autowired constructor(
         query: String?,
         ageIds: List<Long>,
         subjectIds: List<Long>,
-        offset: Long,
-        limit: Long
+        offset: Int,
+        limit: Int
     ): CompetitionFilterResponse {
-        val (items, total) = customItemRepository.findAllByQueryAndAgesAndSubjects(
+        val page = customItemRepository.findAllByQueryAndAgesAndSubjects(
             query,
             ageIds,
             subjectIds,
-            offset,
-            limit,
+            OffsetBasedPageRequest(offset, limit, Sort.by(Sort.Direction.DESC, "id")),
         )
-        val filters = if (offset == 0L) {
+        val filters = if (offset == 0) {
             CompetitionFilter(
                 ages = filterItemService.getAgeFilterItems()
                     .map { it.copy(selected = ageIds.contains(it.id)) },
@@ -60,8 +61,8 @@ class CompetitionItemService @Autowired constructor(
             null
         }
         return CompetitionFilterResponse(
-            list = items.map { fromEntityToModelShort(it) },
-            hasMore = offset + limit < total,
+            list = page.toList().map { fromEntityToModelShort(it) },
+            hasMore = offset + limit < page.totalElements,
             filters = filters
         )
     }
@@ -69,6 +70,16 @@ class CompetitionItemService @Autowired constructor(
     fun getItem(id: Long): CompetitionItem {
         val entity = itemRepository.findByIdOrNull(id) ?: throw ApiError.NOT_FOUND.getException()
         return fromEntityToModel(entity)
+    }
+
+    fun getCodesMap(): Map<String, Long> {
+        val result = mutableMapOf<String, Long>()
+        itemRepository.findAll().map { it.id to mapper.parseTests(it.charIdsBlob) }.forEach { (id, rawTests) ->
+            rawTests.forEach { rawTest ->
+                result[rawTest.id] = id
+            }
+        }
+        return result
     }
 
     private fun fromEntityToModelShort(entity: CompetitionItemEntity): CompetitionItemShort {

@@ -1,6 +1,9 @@
 package ru.erudyt.online.repository.resource
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Repository
 import ru.erudyt.online.entity.resource.CompetitionItemEntity
 import javax.persistence.EntityManager
@@ -17,9 +20,8 @@ class CustomCompetitionItemRepositoryImpl @Autowired constructor(
         searchQuery: String?,
         ageIds: List<Long>,
         subjectIds: List<Long>,
-        offset: Long,
-        limit: Long
-    ): Pair<List<CompetitionItemEntity>, Long> {
+        pageable: Pageable,
+    ): Page<CompetitionItemEntity> {
         val cb = entityManager.criteriaBuilder
         val query = cb.createQuery(CompetitionItemEntity::class.java)
         val item = query.from(CompetitionItemEntity::class.java)
@@ -49,8 +51,22 @@ class CustomCompetitionItemRepositoryImpl @Autowired constructor(
             }
         }
 
-        return entityManager.createQuery(query).resultStream.let {
-            it.skip(offset).limit(limit).toList() to 100
+        val list = entityManager
+            .createQuery(query)
+            .resultStream
+            .skip(pageable.offset)
+            .limit(pageable.pageSize.toLong())
+            .toList()
+
+        val countQuery = cb.createQuery(Long::class.java)
+        val countItem = countQuery.from(CompetitionItemEntity::class.java)
+        countQuery.select(cb.count(countItem)).apply {
+            if (predicates.isNotEmpty()) {
+                where(cb.or(*predicates.toTypedArray()))
+            }
         }
+        val count = entityManager.createQuery(countQuery).singleResult
+
+        return PageImpl(list, pageable, count)
     }
 }

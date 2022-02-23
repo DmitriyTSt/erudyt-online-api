@@ -34,12 +34,13 @@ class AuthService @Autowired constructor(
 		return tokenService.createToken(userProfile.id, anonymousProfile.deviceId, false, anonymousProfile.os)
 	}
 
+	// TODO refactor
 	fun registration(login: String, password: String): Token {
 		val currentTokenPair = tokenService.getCurrentTokenPair()
 		val anonymousProfile = anonymousProfileRepository.findByDeviceIdAndIsActiveIsTrue(currentTokenPair.deviceId)
 			?: throw ApiError.ANONYM_NOT_EXISTS.getException()
 		val userProfile = userService.create(
-            UserEntity(username = login, password = password, firstName = "", lastName = "")
+            UserEntity(username = login, password = password, firstName = "", lastName = "", email = login)
         )
 		return tokenService.createToken(userProfile.id, anonymousProfile.deviceId, false, anonymousProfile.os)
 	}
