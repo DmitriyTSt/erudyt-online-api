@@ -16,6 +16,13 @@ class CustomCompetitionItemRepositoryImpl @Autowired constructor(
     @PersistenceContext val entityManager: EntityManager,
 ) : CustomCompetitionItemRepository {
 
+    /**
+     * @param searchQuery - И [CompetitionItemEntity.title] включает в себя [searchQuery] (если указан)
+     * @param ageIds - И [CompetitionItemEntity.ageGroupsBlob] включает в себя любые [ageIds]
+     * @param subjectIds - И [CompetitionItemEntity.subjectBlob] включает в себя любые [subjectIds]
+     * @param difficulty - И [CompetitionItemEntity.stars] = [difficulty] (если указан)
+     * @param notContainCodes - И [CompetitionItemEntity.charIdsBlob] не включает ни одного [notContainCodes]
+     */
     override fun findAllByQueryAndAgesAndSubjects(
         searchQuery: String?,
         ageIds: List<Long>,
@@ -37,11 +44,13 @@ class CustomCompetitionItemRepositoryImpl @Autowired constructor(
         val predicatesAnd = mutableListOf<Predicate>()
 
         ageIds.forEach { ageId ->
-            predicatesAges.add(cb.or(cb.like(agePath, "%$ageId%")))
+            predicatesAges.add(cb.like(agePath, "%$ageId%"))
         }
+        predicatesAnd.add(cb.or(*predicatesAges.toTypedArray()))
         subjectIds.forEach { subjectId ->
             predicatesSubjects.add(cb.or(cb.like(subjectPath, "%$subjectId%")))
         }
+        predicatesAnd.add(cb.or(*predicatesSubjects.toTypedArray()))
         notContainCodes.forEach { code ->
             predicatesAnd.add(cb.notLike(charIdsPath, "%$code%"))
         }
@@ -54,12 +63,6 @@ class CustomCompetitionItemRepositoryImpl @Autowired constructor(
             predicatesAnd.add(cb.equal(starsPath, difficulty))
         }
         val predicates = mutableListOf<Predicate>()
-        if (predicatesAges.isNotEmpty()) {
-            predicates.add(cb.and(*predicatesAges.toTypedArray()))
-        }
-        if (predicatesSubjects.isNotEmpty()) {
-            predicates.add(cb.and(*predicatesSubjects.toTypedArray()))
-        }
         if (predicatesAnd.isNotEmpty()) {
             predicates.add(cb.and(*predicatesAnd.toTypedArray()))
         }
