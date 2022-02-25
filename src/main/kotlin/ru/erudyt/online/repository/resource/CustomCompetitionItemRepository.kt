@@ -9,6 +9,10 @@ interface CustomCompetitionItemRepository {
         searchQuery: String?,
         ageIds: List<Long>,
         subjectIds: List<Long>,
+        difficulty: Int?,
+        notContainCodes: List<String>,
         pageable: Pageable,
     ): Page<CompetitionItemEntity>
+
+    fun findAllByCodes(codes: List<String>): List<CompetitionItemEntity>
 }

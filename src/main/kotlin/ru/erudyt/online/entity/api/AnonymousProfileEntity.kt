@@ -19,4 +19,5 @@ class AnonymousProfileEntity(
     val isActive: Boolean = true,
     val createdAt: LocalDateTime = LocalDateTime.now(),
     val updatedAt: LocalDateTime = LocalDateTime.now(),
+    val lastEmail: String? = null,
 )

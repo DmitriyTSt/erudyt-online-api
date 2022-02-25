@@ -1,6 +1,7 @@
 package ru.erudyt.online.service
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import ru.erudyt.online.dto.enums.ApiError
 import ru.erudyt.online.dto.enums.Os
@@ -54,6 +55,10 @@ class AuthService @Autowired constructor(
 
     fun refreshToken(deviceId: String, refreshToken: String): Token {
         return tokenService.refreshToken(deviceId, refreshToken)
+    }
+
+    fun getAnonymousProfile(id: Long): AnonymousProfileEntity {
+        return anonymousProfileRepository.findByIdOrNull(id) ?: throw ApiError.NOT_FOUND.getException()
     }
 
     private fun updateAnonymousUser(user: AnonymousProfileEntity, os: Os): AnonymousProfileEntity {

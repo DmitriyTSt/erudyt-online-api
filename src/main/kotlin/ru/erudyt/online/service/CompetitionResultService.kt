@@ -1,6 +1,7 @@
 package ru.erudyt.online.service
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
@@ -13,6 +14,7 @@ import ru.erudyt.online.dto.model.OffsetBasedPageRequest
 import ru.erudyt.online.dto.model.UserResultRow
 import ru.erudyt.online.dto.response.ResultResponse
 import ru.erudyt.online.entity.api.TokenPairEntity
+import ru.erudyt.online.entity.resource.ResultEntity
 import ru.erudyt.online.mapper.ResultMapper
 import ru.erudyt.online.repository.resource.ResultRepository
 
@@ -54,9 +56,16 @@ class CompetitionResultService @Autowired constructor(
      * Получение результатов по email
      */
     private fun searchResults(email: String, offset: Int, limit: Int): ListResponse<UserResultRow> {
-        val page = resultRepository.findAllByEmail(email, getPagination(offset, limit))
-            .map { resultMapper.fromEntityToUserModel(it) }
-        return ListResponse(page.toList(), page.totalElements > offset + limit)
+        val page = searchResultEntities(email, offset, limit)
+        val list = page.toList().map { resultMapper.fromEntityToUserModel(it) }
+        return ListResponse(list, page.totalElements > offset + limit)
+    }
+
+    /**
+     * Получение результатов по email
+     */
+    fun searchResultEntities(email: String, offset: Int, limit: Int): Page<ResultEntity> {
+        return resultRepository.findAllByEmail(email, getPagination(offset, limit))
     }
 
     /**
@@ -68,16 +77,28 @@ class CompetitionResultService @Autowired constructor(
         offset: Int,
         limit: Int
     ): ListResponse<UserResultRow> {
+        val page = getUserResultEntities(currentToken, query, offset, limit)
+        val list = page.toList().map { resultMapper.fromEntityToUserModel(it) }
+        return ListResponse(list, page.totalElements > offset + limit)
+    }
+
+    /**
+     * Получение результатов текущего пользователя
+     */
+    fun getUserResultEntities(
+        currentToken: TokenPairEntity,
+        query: String,
+        offset: Int,
+        limit: Int
+    ): Page<ResultEntity> {
         val currentUser = userService.getCurrentUser(currentToken)
-        val page = resultRepository.findAllByEmailAndCompetitionTitleLikeOrUserIdAndCompetitionTitleLike(
+        return resultRepository.findAllByEmailAndCompetitionTitleLikeOrUserIdAndCompetitionTitleLike(
             email = currentUser.email,
             query1 = query,
             userId = currentUser.id,
             query2 = query,
             pageable = getPagination(offset, limit),
         )
-            .map { resultMapper.fromEntityToUserModel(it) }
-        return ListResponse(page.toList(), page.totalElements > offset + limit)
     }
 
     private fun getPagination(offset: Int, limit: Int): Pageable {
