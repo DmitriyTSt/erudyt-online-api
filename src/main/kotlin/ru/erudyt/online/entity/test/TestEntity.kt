@@ -9,8 +9,8 @@ data class TestEntity(
     val total: Int,
     /** Тип теста ??? */
     val type: Int,
-    /** Навигация ??? */
-    val navigation: Int,
+    /** Показывать прогресс прохождения вопросов */
+    val navigation: Boolean,
     /** Название теста */
     val name: String,
     /** Возрастная категория */
@@ -19,7 +19,7 @@ data class TestEntity(
     val shuffle: Boolean,
     /** Все вопросы на одной странице */
     val allInOne: Boolean,
-    /** Показывать ответы ??? */
+    /** Показывать правильные ответы */
     val showAnswer: Boolean,
     /** ??? */
     val needPreface: Boolean,
@@ -33,10 +33,14 @@ data class TestEntity(
     val diplomaC: String,
     /** Текст для диплома */
     val diplomaText: String,
-    /** ??? */
+    /** Стоимость наградных материалов */
     val cost: Int,
     /** Места ??? */
     val places: List<Int>,
     /** Список вопросов */
     val questions: List<QuestionEntity>,
-)
+) {
+    companion object {
+        private const val TYPE_LIST_ANSWER = 1
+    }
+}
