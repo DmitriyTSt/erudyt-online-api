@@ -1,6 +1,6 @@
 package ru.erudyt.online.entity.test
 
-enum class QuestionTypeEntity {
+enum class QuestionImageTypeEntity {
     /** Без картинки */
     NO_IMAGE,
 
