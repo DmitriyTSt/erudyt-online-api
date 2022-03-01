@@ -2,21 +2,37 @@ package ru.erudyt.online.dto.model
 
 class CompetitionTest(
     val id: String,
-    val type: Type,
     val title: String,
     val subject: String,
     val ageCategoryTitle: String,
-    val questions: List<String>,
+    val questions: List<Question>,
 ) {
-    enum class Type {
+
+    enum class QuestionType {
         LIST_ANSWER,
+        SINGLE_ANSWER,
     }
 
-    class Question(
+    sealed class Question(
         val id: String,
         val text: String,
-        val answers: List<String>,
-    )
+        val image: String?,
+        val type: QuestionType,
+    ) {
+        class ListAnswer(
+            id: String,
+            text: String,
+            image: String?,
+            val answers: List<String>,
+        ) : Question(id, text, image, QuestionType.LIST_ANSWER)
+
+        class SingleAnswer(
+            id: String,
+            text: String,
+            image: String?,
+            val label: String,
+        ) : Question(id, text, image, QuestionType.SINGLE_ANSWER)
+    }
 
     class Answer(
         val id: String,
