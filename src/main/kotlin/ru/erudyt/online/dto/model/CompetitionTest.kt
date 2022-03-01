@@ -3,7 +3,6 @@ package ru.erudyt.online.dto.model
 class CompetitionTest(
     val id: String,
     val title: String,
-    val subject: String,
     val ageCategoryTitle: String,
     val questions: List<Question>,
 ) {
@@ -14,20 +13,20 @@ class CompetitionTest(
     }
 
     sealed class Question(
-        val id: String,
+        val id: Int,
         val text: String,
         val image: String?,
         val type: QuestionType,
     ) {
         class ListAnswer(
-            id: String,
+            id: Int,
             text: String,
             image: String?,
-            val answers: List<String>,
+            val answers: List<Answer>,
         ) : Question(id, text, image, QuestionType.LIST_ANSWER)
 
         class SingleAnswer(
-            id: String,
+            id: Int,
             text: String,
             image: String?,
             val label: String,
