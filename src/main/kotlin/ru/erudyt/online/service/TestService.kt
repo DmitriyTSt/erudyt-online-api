@@ -3,6 +3,8 @@ package ru.erudyt.online.service
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import ru.erudyt.online.dto.model.CompetitionTest
+import ru.erudyt.online.dto.request.CheckTestRequest
+import ru.erudyt.online.dto.response.CheckTestResponse
 import ru.erudyt.online.entity.test.QuestionEntity
 import ru.erudyt.online.entity.test.TestEntity
 import ru.erudyt.online.mapper.TestMapper
@@ -53,5 +55,9 @@ class TestService @Autowired constructor(
 
     fun getRawTest(code: String): TestEntity {
         return testRepository.getTest(code)
+    }
+
+    fun check(request: CheckTestRequest): CheckTestResponse {
+        TODO("not implemented")
     }
 }

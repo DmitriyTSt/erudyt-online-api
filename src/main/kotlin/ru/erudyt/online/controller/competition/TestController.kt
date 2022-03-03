@@ -5,9 +5,13 @@ import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import ru.erudyt.online.controller.base.BaseResponse
+import ru.erudyt.online.dto.request.CheckTestRequest
+import ru.erudyt.online.dto.response.CheckTestResponse
 import ru.erudyt.online.dto.response.CompetitionTestResponse
 import ru.erudyt.online.entity.test.TestEntity
 import ru.erudyt.online.service.TestService
@@ -27,5 +31,10 @@ class TestController @Autowired constructor(
     @GetMapping("/test/{id}")
     fun getTest(@PathVariable("id") id: String): ResponseEntity<BaseResponse<CompetitionTestResponse>> {
         return ResponseEntity.ok(BaseResponse(CompetitionTestResponse(testService.getTestForPassing(id))))
+    }
+
+    @PostMapping("/check")
+    fun check(@RequestBody checkRequest: CheckTestRequest): ResponseEntity<BaseResponse<CheckTestResponse>> {
+        return ResponseEntity.ok(BaseResponse(testService.check(checkRequest)))
     }
 }
