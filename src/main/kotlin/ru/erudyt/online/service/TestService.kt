@@ -7,6 +7,7 @@ import ru.erudyt.online.dto.enums.getException
 import ru.erudyt.online.dto.model.CompetitionTest
 import ru.erudyt.online.dto.model.ResultInfo
 import ru.erudyt.online.dto.model.Score
+import ru.erudyt.online.dto.model.TempResult
 import ru.erudyt.online.dto.request.CheckTestRequest
 import ru.erudyt.online.dto.response.CheckTestResponse
 import ru.erudyt.online.entity.resource.CommonResultInfoEntity
@@ -23,6 +24,8 @@ class TestService @Autowired constructor(
     private val testMapper: TestMapper,
     private val statisticService: StatisticService,
     private val resultMapper: ResultMapper,
+    private val tempResultService: TempResultService,
+    private val tokenService: TokenService,
 ) {
     fun getTestForPassing(code: String): CompetitionTest {
         val test = testRepository.getTest(code)
@@ -71,6 +74,8 @@ class TestService @Autowired constructor(
             throw ApiError.NOT_ALL_ANSWERS.getException()
         }
 
+        val tempResultQuestions = mutableListOf<TempResult.Question>()
+
         val test = testRepository.getTest(request.testId)
         var maxBall = 0
         var ball = 0
@@ -83,6 +88,13 @@ class TestService @Autowired constructor(
                 val currentBall = checkAnswer(question, answer)
                 if (currentBall != null) {
                     ball += currentBall
+                    tempResultQuestions.add(
+                        TempResult.Question(
+                            id = question.id,
+                            userAnswer = getAnswer(question, answer).orEmpty(),
+                            correctAnswer = getCorrectAnswer(question).orEmpty()
+                        )
+                    )
                 } else {
                     emptyAnswers++
                 }
@@ -91,12 +103,36 @@ class TestService @Autowired constructor(
             }
         }
 
+        // TODO add warning if maxMall != test.max
+
         if (emptyAnswers > 2 && test.type < 2) {
             throw ApiError.NOT_ALL_ANSWERS.getException()
         }
 
+        val place = if (test.places.isNotEmpty()) {
+            getPlace(test.places, ball)
+        } else {
+            null
+        }
+
+        val resultInfo = getResultInfo(test, ball, place)
+
+        val currentToken = tokenService.getCurrentTokenPair()
+        val tempResultEntity = tempResultService.save(
+            TempResult(
+                isAnon = currentToken.isAnonym,
+                userId = currentToken.userId,
+                code = request.testId,
+                competitionTitle = test.name,
+                place = place ?: 0,
+                result = ball,
+                maxBall = maxBall,
+                questions = tempResultQuestions,
+            )
+        )
+
         return CheckTestResponse(
-            id = test.id,
+            id = tempResultEntity.id,
             answers = request.questionResults.mapIndexed { index, answerResult ->
                 val question = questionById[answerResult.questionId]!!
                 CheckTestResponse.Answer(
@@ -109,7 +145,7 @@ class TestService @Autowired constructor(
             },
             score = Score(ball, maxBall),
             spentTime = request.spentTime,
-            resultInfo = getResultInfo(test, ball),
+            resultInfo = resultInfo,
         )
     }
 
@@ -120,6 +156,13 @@ class TestService @Autowired constructor(
             answer.textAnswer
         } else {
             null
+        }
+    }
+
+    private fun getCorrectAnswer(question: QuestionEntity): String? {
+        return when (question) {
+            is QuestionEntity.ListAnswer -> question.answers.find { it.id == question.correctAnswerId }?.text
+            is QuestionEntity.SingleAnswer -> question.correctAnswer
         }
     }
 
@@ -135,7 +178,7 @@ class TestService @Autowired constructor(
     /**
      * @return null - для олимпиад (test.type == 2)
      */
-    private fun getResultInfo(test: TestEntity, ball: Int): ResultInfo? {
+    private fun getResultInfo(test: TestEntity, ball: Int, place: Int?): ResultInfo? {
         if (test.type > 1) {
             return null
         }
@@ -153,11 +196,7 @@ class TestService @Autowired constructor(
         val totalBetter = totalStudents - totalWorst
         val totalBetterPercent = if (totalStudents > 0) round(totalBetter * 100f / totalStudents).toInt() else 0
 
-        val place = if (test.places.isNotEmpty()) {
-            getPlace(test.places, ball)
-        } else {
-            null
-        }
+
         val placeText = place?.let { resultMapper.getResultStatusToText(it) }?.second
         // TODO add test_time
         val totalWorstStr = if (totalWorst > 0) {

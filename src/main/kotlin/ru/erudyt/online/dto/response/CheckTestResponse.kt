@@ -5,7 +5,7 @@ import ru.erudyt.online.dto.model.Score
 
 class CheckTestResponse(
     /** Временный идентификатор прохождения теста */
-    val id: String,
+    val id: Long,
     /** Выбранные ответы */
     val answers: List<Answer>,
     /** Набранные баллы */

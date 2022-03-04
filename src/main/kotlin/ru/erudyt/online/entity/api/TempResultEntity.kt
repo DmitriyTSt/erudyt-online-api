@@ -16,6 +16,7 @@ class TempResultEntity(
     val isAnon: Boolean,
     val userId: Long,
     val code: String,
+    @Column(name = "competition_title") val competitionTitle: String,
     val place: Int,
     val result: Int,
     @Column(name = "max_ball") val maxBall: Int,
