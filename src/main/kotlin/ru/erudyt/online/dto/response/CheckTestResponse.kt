@@ -1,5 +1,6 @@
 package ru.erudyt.online.dto.response
 
+import ru.erudyt.online.dto.model.ResultInfo
 import ru.erudyt.online.dto.model.Score
 
 class CheckTestResponse(
@@ -7,16 +8,12 @@ class CheckTestResponse(
     val id: String,
     /** Выбранные ответы */
     val answers: List<Answer>,
-    /** Место (Победитель (2 место)) */
-    val place: String,
     /** Набранные баллы */
     val score: Score,
     /** Затраченное время, в секундах */
     val spentTime: Int,
-    /** Средний балл по вем участникам в процентах */
-    val averageScore: Int,
-    /** Описание результата */
-    val resultText: String,
+    /** Данные результата (null если олимпиада) */
+    val resultInfo: ResultInfo?,
 ) {
     class Answer(
         val question: Question,

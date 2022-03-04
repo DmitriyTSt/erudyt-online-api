@@ -49,4 +49,8 @@ class ResultEntity(
     val rating1: Int,
     val rating2: Int,
     val rating3: Int,
-)
+) {
+    companion object {
+        const val TABLE_NAME = "tl_comp_result"
+    }
+}
