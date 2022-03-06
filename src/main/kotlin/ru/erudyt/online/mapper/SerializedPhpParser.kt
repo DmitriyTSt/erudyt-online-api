@@ -22,10 +22,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 package ru.erudyt.online.mapper
 
-import java.lang.IllegalStateException
-import java.lang.Exception
-import java.util.LinkedHashMap
-import java.util.HashMap
 import java.util.regex.Pattern
 
 /**

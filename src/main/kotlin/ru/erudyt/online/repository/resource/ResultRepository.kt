@@ -4,8 +4,8 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
-import ru.erudyt.online.entity.resource.ResultEntity
 import ru.erudyt.online.entity.resource.CommonResultInfoEntity
+import ru.erudyt.online.entity.resource.ResultEntity
 
 interface ResultRepository : JpaRepository<ResultEntity, Long> {
 
