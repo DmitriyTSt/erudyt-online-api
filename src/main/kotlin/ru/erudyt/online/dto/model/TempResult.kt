@@ -8,6 +8,7 @@ class TempResult(
     val place: Int,
     val result: Int,
     val maxBall: Int,
+    val ip: String,
     val questions: List<Question>,
 ) {
     class Question(

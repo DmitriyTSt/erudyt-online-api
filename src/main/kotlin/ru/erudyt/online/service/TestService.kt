@@ -16,6 +16,7 @@ import ru.erudyt.online.entity.test.TestEntity
 import ru.erudyt.online.mapper.ResultMapper
 import ru.erudyt.online.mapper.TestMapper
 import ru.erudyt.online.repository.test.TestRepository
+import javax.servlet.http.HttpServletRequest
 import kotlin.math.round
 
 @Service
@@ -69,10 +70,14 @@ class TestService @Autowired constructor(
         return testRepository.getTest(code)
     }
 
-    fun check(request: CheckTestRequest): CheckTestResponse {
+    fun check(request: CheckTestRequest, httpRequest: HttpServletRequest): CheckTestResponse {
         if (request.questionResults.isEmpty()) {
             throw ApiError.NOT_ALL_ANSWERS.getException()
         }
+
+        val ip = httpRequest.getHeader("HTTP_CLIENT_IP")?.takeIf { it.isNotEmpty() }
+            ?: httpRequest.getHeader("HTTP_X_FORWARDED_FOR")?.takeIf { it.isNotEmpty() }
+            ?: httpRequest.remoteAddr
 
         val tempResultQuestions = mutableListOf<TempResult.Question>()
 
@@ -127,6 +132,7 @@ class TestService @Autowired constructor(
                 place = place ?: 0,
                 result = ball,
                 maxBall = maxBall,
+                ip = ip,
                 questions = tempResultQuestions,
             )
         )

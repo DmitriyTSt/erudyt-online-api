@@ -23,4 +23,5 @@ class TempResultEntity(
     val answers: String,
     val sequence: String,
     val correct: String,
+    val ip: String,
 )

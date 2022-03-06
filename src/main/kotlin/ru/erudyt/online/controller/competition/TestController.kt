@@ -15,6 +15,7 @@ import ru.erudyt.online.dto.response.CheckTestResponse
 import ru.erudyt.online.dto.response.CompetitionTestResponse
 import ru.erudyt.online.entity.test.TestEntity
 import ru.erudyt.online.service.TestService
+import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("/api/competition/", produces = [MediaType.APPLICATION_JSON_VALUE])
@@ -34,7 +35,10 @@ class TestController @Autowired constructor(
     }
 
     @PostMapping("/check")
-    fun check(@RequestBody checkRequest: CheckTestRequest): ResponseEntity<BaseResponse<CheckTestResponse>> {
-        return ResponseEntity.ok(BaseResponse(testService.check(checkRequest)))
+    fun check(
+        @RequestBody checkRequest: CheckTestRequest,
+        httpRequest: HttpServletRequest
+    ): ResponseEntity<BaseResponse<CheckTestResponse>> {
+        return ResponseEntity.ok(BaseResponse(testService.check(checkRequest, httpRequest)))
     }
 }
