@@ -48,7 +48,7 @@ class ResourceDatasourceConfig {
 			setJpaPropertyMap(
 				mapOf(
 					"hibernate.dialect" to "org.hibernate.dialect.MySQL5Dialect",
-					"hibernate.show_sql" to "true",
+//					"hibernate.show_sql" to "true",
 				)
 			)
 		}
