@@ -1,4 +1,4 @@
-package ru.erudyt.online.controller.competition
+package ru.erudyt.online.controller.common
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
