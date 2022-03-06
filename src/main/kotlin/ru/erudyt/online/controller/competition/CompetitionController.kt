@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import ru.erudyt.online.controller.base.BaseResponse
-import ru.erudyt.online.dto.response.CompetitionFilterResponse
 import ru.erudyt.online.dto.model.CompetitionItem
 import ru.erudyt.online.dto.request.CompetitionFilterRequest
+import ru.erudyt.online.dto.response.CompetitionFilterResponse
 import ru.erudyt.online.service.CompetitionItemService
 
 @RestController
