@@ -10,8 +10,10 @@ import ru.erudyt.online.controller.base.ListResponse
 import ru.erudyt.online.dto.enums.ApiError
 import ru.erudyt.online.dto.enums.getException
 import ru.erudyt.online.dto.model.CommonResultRow
+import ru.erudyt.online.dto.model.CreatedResult
 import ru.erudyt.online.dto.model.OffsetBasedPageRequest
 import ru.erudyt.online.dto.model.UserResultRow
+import ru.erudyt.online.dto.request.SaveResultRequest
 import ru.erudyt.online.dto.response.ResultResponse
 import ru.erudyt.online.entity.api.TokenPairEntity
 import ru.erudyt.online.entity.resource.ResultEntity
@@ -26,6 +28,7 @@ class CompetitionResultService @Autowired constructor(
     private val tokenService: TokenService,
     private val testService: TestService,
     private val competitionItemService: CompetitionItemService,
+    private val tempResultService: TempResultService,
 ) {
     fun getCommonResult(offset: Int, limit: Int): ListResponse<CommonResultRow> {
         val codesMap = competitionItemService.getCodesMap()
@@ -50,6 +53,10 @@ class CompetitionResultService @Autowired constructor(
         return ResultResponse(
             resultMapper.fromEntityToDetailModel(result, test)
         )
+    }
+
+    fun saveResult(request: SaveResultRequest): CreatedResult {
+        TODO("not implemented")
     }
 
     /**
