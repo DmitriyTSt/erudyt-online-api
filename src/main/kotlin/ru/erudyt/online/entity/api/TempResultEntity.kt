@@ -24,4 +24,6 @@ class TempResultEntity(
     val sequence: String,
     val correct: String,
     val ip: String,
+    val cost: Int,
+    @Column(name = "spent_time") val spentTime: Long,
 )

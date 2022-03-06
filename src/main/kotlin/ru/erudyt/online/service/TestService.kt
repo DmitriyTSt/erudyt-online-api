@@ -133,6 +133,8 @@ class TestService @Autowired constructor(
                 result = ball,
                 maxBall = maxBall,
                 ip = ip,
+                cost = test.cost,
+                spentTime = request.spentTime,
                 questions = tempResultQuestions,
             )
         )

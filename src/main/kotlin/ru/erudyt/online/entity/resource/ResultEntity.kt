@@ -2,6 +2,8 @@ package ru.erudyt.online.entity.resource
 
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.Table
 
@@ -36,7 +38,7 @@ class ResultEntity(
     val comment: String?,
     val pid: Long?,
     val tstamp: Long?,
-    val key: String,
+    @Column(name = "`key`") val key: String,
     @Column(name = "date_reg") val dateReg: Long?,
     val cost: Int,
     val time: Long,

@@ -11,7 +11,7 @@ class CheckTestResponse(
     /** Набранные баллы */
     val score: Score,
     /** Затраченное время, в секундах */
-    val spentTime: Int,
+    val spentTime: Long,
     /** Данные результата (null если олимпиада) */
     val resultInfo: ResultInfo?,
 ) {

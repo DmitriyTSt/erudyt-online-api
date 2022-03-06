@@ -3,7 +3,7 @@ package ru.erudyt.online.dto.request
 class CheckTestRequest(
     val testId: String,
     val questionResults: List<QuestionResult>,
-    val spentTime: Int,
+    val spentTime: Long,
 ) {
     class QuestionResult(
         val questionId: Int,

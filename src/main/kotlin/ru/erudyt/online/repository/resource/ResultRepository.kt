@@ -27,5 +27,8 @@ interface ResultRepository : JpaRepository<ResultEntity, Long> {
     )
     fun getCommonResult(code: String): CommonResultInfoEntity
 
+    @Query("select t.id from ${ResultEntity.TABLE_NAME} t order by t.id desc limit 1", nativeQuery = true)
+    fun getLastId(): Long
+
     fun countByCodeAndResultLessThanEqual(code: String, ball: Int): Int
 }

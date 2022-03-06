@@ -23,6 +23,8 @@ class TempResultMapper {
                 .mapIndexed { index, question -> "${index + 1};${question.correctAnswer}" }
                 .joinToString(";"),
             ip = model.ip,
+            cost = model.cost,
+            spentTime = model.spentTime,
         )
     }
 }

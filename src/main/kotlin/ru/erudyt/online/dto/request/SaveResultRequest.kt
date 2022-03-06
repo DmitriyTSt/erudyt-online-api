@@ -13,7 +13,7 @@ class SaveResultRequest(
     val region: String?,
     val email: String,
     val teacherEmail: String?,
-    val diplomTypeId: String,
+    val diplomaType: String,
     val review: Review,
 ) {
     class Review(
