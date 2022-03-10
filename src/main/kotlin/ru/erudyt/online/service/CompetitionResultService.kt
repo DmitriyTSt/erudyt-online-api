@@ -122,7 +122,7 @@ class CompetitionResultService @Autowired constructor(
             id = resultEntity.id,
             username = resultEntity.name,
             resultLink = "${domainSettings.baseUrl}/diplom.html?id=${resultEntity.id}",
-            achievementText = ""
+            achievementText = "", // TODO add achievements
         )
     }
 
