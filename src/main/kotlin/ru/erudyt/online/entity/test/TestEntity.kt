@@ -17,7 +17,7 @@ data class TestEntity(
     val shuffle: Boolean,
     /** Все вопросы на одной странице */
     val allInOne: Boolean,
-    /** Показывать ответы ??? */
+    /** Показывать ответы */
     val showAnswer: Boolean,
     /** Тип диплома */
     val diploma: String,

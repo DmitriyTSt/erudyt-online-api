@@ -18,6 +18,12 @@ class CheckTestResponse(
     class Answer(
         val question: Question,
         val answerText: String,
+        val correct: Correct?,
+    )
+
+    class Correct(
+        val answerText: String,
+        val isCorrect: Boolean,
     )
 
     class Question(

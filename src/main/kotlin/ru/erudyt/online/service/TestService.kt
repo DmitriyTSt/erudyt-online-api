@@ -148,7 +148,15 @@ class TestService @Autowired constructor(
                         title = "Вопрос № ${index + 1}",
                         text = question.text,
                     ),
-                    answerText = getAnswer(question, answerResult).orEmpty()
+                    answerText = getAnswer(question, answerResult).orEmpty(),
+                    correct = if (test.showAnswer) {
+                        CheckTestResponse.Correct(
+                            answerText = getCorrectAnswer(question).orEmpty(),
+                            isCorrect = checkAnswer(question, answerResult) == 1,
+                        )
+                    } else {
+                        null
+                    }
                 )
             },
             score = Score(ball, maxBall),
