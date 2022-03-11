@@ -27,6 +27,7 @@ import java.util.Date
 @Service
 @EnableConfigurationProperties(DomainSettings::class)
 class CompetitionResultService @Autowired constructor(
+    private val authService: AuthService,
     private val userService: UserService,
     private val resultRepository: ResultRepository,
     private val resultMapper: ResultMapper,
@@ -70,6 +71,12 @@ class CompetitionResultService @Autowired constructor(
 
         val key = "${tempResult.code}_%06d".format(((time + 8191) * 131071) % 1000000)
 
+        val email = fixEmail(request.email)
+        val currentToken = tokenService.getCurrentTokenPair()
+        if (currentToken.isAnonym) {
+            authService.updateAnonymousUserLastEmail(currentToken.userId, email)
+        }
+
         // TODO try use normal id generate strategy
         val lastId = resultRepository.getLastId()
         val result = ResultEntity(
@@ -80,7 +87,7 @@ class CompetitionResultService @Autowired constructor(
             place = tempResult.place,
             competitionTitle = tempResult.competitionTitle,
             name = fixFio("${request.surname} ${request.name} ${request.patronymic}"),
-            email = fixEmail(request.email),
+            email = email,
             school = fixSchoolOrPosition(request.school.orEmpty()),
             country = request.country,
             city = request.city,

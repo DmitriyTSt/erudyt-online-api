@@ -21,7 +21,7 @@ class AuthService @Autowired constructor(
     fun createAnonym(device: Device): Token {
         val profile = anonymousProfileRepository
             .findByDeviceId(device.id)
-            ?.let { updateAnonymousUser(it, device.os) }
+            ?.let { updateAnonymousUserOs(it, device.os) }
             ?: createAnonymousUser(device)
         return tokenService.createToken(profile.id, device.id, true, device.os)
     }
@@ -61,7 +61,13 @@ class AuthService @Autowired constructor(
         return anonymousProfileRepository.findByIdOrNull(id) ?: throw ApiError.NOT_FOUND.getException()
     }
 
-    private fun updateAnonymousUser(user: AnonymousProfileEntity, os: Os): AnonymousProfileEntity {
+    fun updateAnonymousUserLastEmail(id: Long, email: String): AnonymousProfileEntity {
+        val user = getAnonymousProfile(id)
+        user.lastEmail = email
+        return anonymousProfileRepository.save(user)
+    }
+
+    private fun updateAnonymousUserOs(user: AnonymousProfileEntity, os: Os): AnonymousProfileEntity {
         user.os = os
         return anonymousProfileRepository.save(user)
     }

@@ -65,10 +65,10 @@ class RecommendationService @Autowired constructor(
             resultService.getUserResultEntities(currentToken, "", 0, limit).toList()
         } else {
             val anonUser = authService.getAnonymousProfile(currentToken.userId)
-            if (anonUser.lastEmail.isNullOrEmpty()) {
+            anonUser.lastEmail?.takeIf { it.isNotEmpty() }?.let { email ->
+                resultService.searchResultEntities(email, 0, limit).toList()
+            } ?: run {
                 emptyList()
-            } else {
-                resultService.searchResultEntities(anonUser.lastEmail, 0, limit).toList()
             }
         }
     }
