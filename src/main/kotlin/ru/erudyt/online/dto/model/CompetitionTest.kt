@@ -36,5 +36,6 @@ class CompetitionTest(
     class Answer(
         val id: String,
         val text: String,
+        val image: String?,
     )
 }

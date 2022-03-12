@@ -5,4 +5,6 @@ class AnswerEntity(
     val id: String,
     /** Текст ответа */
     val text: String,
+    /** Картинка ответа */
+    val imagePath: String?,
 )

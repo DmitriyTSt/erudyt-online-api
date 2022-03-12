@@ -33,6 +33,7 @@ class TestMapper @Autowired constructor(
         return CompetitionTest.Answer(
             id = answerEntity.id,
             text = answerEntity.text,
+            image = imageMapper.fromPathToUrl(answerEntity.imagePath),
         )
     }
 }
