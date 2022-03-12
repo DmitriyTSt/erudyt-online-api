@@ -53,9 +53,9 @@ interface ResultRepository : JpaRepository<ResultEntity, Long> {
                                 ) as t
                            GROUP BY email, name
                            ORDER BY score DESC, `date` ASC, name
-                       ) AS STBL
+                       ) AS STBL LIMIT ?3
         """,
         nativeQuery = true,
     )
-    fun getDayRating(startDay: Long, endDay: Long): List<RatingEntity>
+    fun getDayRating(startDay: Long, endDay: Long, limit: Int): List<RatingEntity>
 }

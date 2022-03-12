@@ -28,6 +28,8 @@ import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.Date
 
+private const val RATING_LIMIT = 25
+
 @Service
 @EnableConfigurationProperties(DomainSettings::class)
 class CompetitionResultService @Autowired constructor(
@@ -235,7 +237,7 @@ class CompetitionResultService @Autowired constructor(
         val nextDate = date.plusDays(1)
         val startDay = date.toMillis() / 1000
         val endDay = nextDate.toMillis() / 1000
-        return resultRepository.getDayRating(startDay, endDay)
+        return resultRepository.getDayRating(startDay, endDay, RATING_LIMIT)
             .mapIndexed { index, entity -> resultMapper.fromEntityToModel(entity, index) }
     }
 
