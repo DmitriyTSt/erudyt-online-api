@@ -49,7 +49,7 @@ class GlobalExceptionHandler @Autowired constructor(
     ): ResponseEntity<Any?> {
         ex.printStackTrace()
         return ResponseEntity.status(status).body(
-            ErrorResponse(ErrorDTO("INTERNAL_EXCEPTION", "Извините, что-то пошло не так"))
+            ErrorResponse(ErrorDTO("INTERNAL_EXCEPTION", "Извините, что-то пошло не так", ex.message))
         )
     }
 }

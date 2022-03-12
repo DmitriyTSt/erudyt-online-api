@@ -88,7 +88,7 @@ class ResultMapper @Autowired constructor(
         }
     }
 
-    private fun getResultStatusToText(place: Int): Pair<ResultStatus, String> {
+    fun getResultStatusToText(place: Int): Pair<ResultStatus, String> {
         return if (place > 0) {
             if (place < 4) {
                 ResultStatus.valueOf("WINNER_${place}") to

@@ -1,31 +1,41 @@
 package ru.erudyt.online.service
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+import ru.erudyt.online.config.DomainSettings
 import ru.erudyt.online.controller.base.ListResponse
 import ru.erudyt.online.dto.enums.ApiError
 import ru.erudyt.online.dto.enums.getException
 import ru.erudyt.online.dto.model.CommonResultRow
+import ru.erudyt.online.dto.model.CreatedResult
 import ru.erudyt.online.dto.model.OffsetBasedPageRequest
 import ru.erudyt.online.dto.model.UserResultRow
+import ru.erudyt.online.dto.request.SaveResultRequest
 import ru.erudyt.online.dto.response.ResultResponse
 import ru.erudyt.online.entity.api.TokenPairEntity
 import ru.erudyt.online.entity.resource.ResultEntity
 import ru.erudyt.online.mapper.ResultMapper
 import ru.erudyt.online.repository.resource.ResultRepository
+import java.util.Date
 
 @Service
+@EnableConfigurationProperties(DomainSettings::class)
 class CompetitionResultService @Autowired constructor(
+    private val authService: AuthService,
     private val userService: UserService,
     private val resultRepository: ResultRepository,
     private val resultMapper: ResultMapper,
     private val tokenService: TokenService,
     private val testService: TestService,
     private val competitionItemService: CompetitionItemService,
+    private val tempResultService: TempResultService,
+    private val domainSettings: DomainSettings,
 ) {
     fun getCommonResult(offset: Int, limit: Int): ListResponse<CommonResultRow> {
         val codesMap = competitionItemService.getCodesMap()
@@ -49,6 +59,77 @@ class CompetitionResultService @Autowired constructor(
         val test = testService.getRawTest(result.code)
         return ResultResponse(
             resultMapper.fromEntityToDetailModel(result, test)
+        )
+    }
+
+    @Transactional
+    fun saveResult(request: SaveResultRequest): CreatedResult {
+        val tempResult = tempResultService.get(request.completeId)
+        val userId = tempResult.userId.takeIf { !tempResult.isAnon }
+
+        val time = Date().time / 1000
+
+        val key = "${tempResult.code}_%06d".format(((time + 8191) * 131071) % 1000000)
+
+        val email = fixEmail(request.email)
+        val currentToken = tokenService.getCurrentTokenPair()
+        if (currentToken.isAnonym) {
+            authService.updateAnonymousUserLastEmail(currentToken.userId, email)
+        }
+
+        // TODO try use normal id generate strategy
+        val lastId = resultRepository.getLastId()
+        val result = ResultEntity(
+            id = lastId + 1,
+            date = time,
+            paid = "",
+            code = tempResult.code,
+            place = tempResult.place,
+            competitionTitle = tempResult.competitionTitle,
+            name = fixFio("${request.surname} ${request.name} ${request.patronymic}"),
+            email = email,
+            school = fixSchoolOrPosition(request.school.orEmpty()),
+            country = request.country,
+            city = request.city,
+            region = request.region.orEmpty(),
+            position = fixSchoolOrPosition(request.position.orEmpty()),
+            teacher = fixFio(request.teacher.orEmpty()),
+            teacherSchool = "",
+            teacherEmail = fixEmail(request.teacherEmail.orEmpty()),
+            coord = "",
+            result = tempResult.result,
+            maxBall = tempResult.maxBall,
+            answers = tempResult.answers,
+            sequence = tempResult.sequence,
+            correct = tempResult.correct,
+            userId = userId ?: 0,
+            summ = 0.0,
+            lastModified = null,
+            comment = null,
+            pid = null,
+            tstamp = null,
+            key = key,
+            dateReg = null,
+            cost = tempResult.cost,
+            time = tempResult.spentTime,
+            ip = tempResult.ip,
+            template = request.diplomaType,
+            hide = "",
+            groupId = 0,
+            medalP = 0,
+            medalT = 0,
+            rating1 = request.review.quality ?: 0,
+            rating2 = request.review.difficulty ?: 0,
+            rating3 = request.review.interest ?: 0,
+        )
+        val resultEntity = resultRepository.save(result)
+        tempResultService.delete(request.completeId)
+
+        return CreatedResult(
+            id = resultEntity.id,
+            username = resultEntity.name,
+            resultLink = "${domainSettings.baseUrl}/diplom.html?id=${resultEntity.id}",
+            achievementText = "", // TODO add achievements
         )
     }
 
@@ -103,5 +184,37 @@ class CompetitionResultService @Autowired constructor(
 
     private fun getPagination(offset: Int, limit: Int): Pageable {
         return OffsetBasedPageRequest(offset, limit, Sort.by(Sort.Direction.DESC, "id"))
+    }
+
+    private fun fixEmail(email: String): String {
+        return email.replace(" ", "")
+    }
+
+    private fun fixSchoolOrPosition(schoolOrPosition: String): String {
+        return schoolOrPosition.let { " $schoolOrPosition" }
+            .replace(" \"", " «")
+            .replace("\\\"", "»")
+            .replace("\"", "»")
+            .substring(1)
+            .replace("  ", " ")
+            .trim()
+    }
+
+    private fun fixFio(username: String): String {
+        return username.replace(Regex("/[\\s]{2,}/"), " ").trim().let { caseConvert(it) }
+    }
+
+    private fun caseConvert(s: String): String {
+        return s.mapIndexed { index, c ->
+            if (index > 0) {
+                if (" ., -\"–«»".contains(s[index - 1])) {
+                    c.uppercase()
+                } else {
+                    c.lowercase()
+                }
+            } else {
+                c.uppercase()
+            }
+        }.joinToString("")
     }
 }

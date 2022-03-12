@@ -8,6 +8,7 @@ import ru.erudyt.online.config.TestSettings
 import ru.erudyt.online.dto.enums.ApiError
 import ru.erudyt.online.dto.enums.getException
 import ru.erudyt.online.entity.test.TestEntity
+import ru.erudyt.online.entity.test.TestNotSupportedEntity
 import java.io.File
 import java.io.IOException
 
@@ -25,6 +26,11 @@ class TestRepository @Autowired constructor(
         }
         if (!file.exists()) {
             throw ApiError.NOT_FOUND.getException()
+        }
+        val content = file.readText()
+        val testNotSupported = gson.fromJson(content, TestNotSupportedEntity::class.java)
+        if (testNotSupported.errorCode != null) {
+            throw ApiError.TEST_NOT_SUPPORTED.getException()
         }
         return gson.fromJson(file.readText(), TestEntity::class.java)
     }
