@@ -3,10 +3,12 @@ package ru.erudyt.online.mapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import ru.erudyt.online.dto.model.CommonResultRow
+import ru.erudyt.online.dto.model.RatingRow
 import ru.erudyt.online.dto.model.ResultStatus
 import ru.erudyt.online.dto.model.Score
 import ru.erudyt.online.dto.model.UserResultDetail
 import ru.erudyt.online.dto.model.UserResultRow
+import ru.erudyt.online.entity.resource.RatingEntity
 import ru.erudyt.online.entity.resource.ResultEntity
 import ru.erudyt.online.entity.test.TestEntity
 
@@ -52,6 +54,15 @@ class ResultMapper @Autowired constructor(
             score = buildScore(entity.result, entity.maxBall),
             spentTime = entity.time,
             answers = buildAnswers(entity, test),
+        )
+    }
+
+    fun fromEntityToModel(entity: RatingEntity, index: Int): RatingRow {
+        return RatingRow(
+            rank = index + 1,
+            username = entity.name,
+            score = entity.score,
+            countryIcon = imageMapper.fromCountryToImage(entity.country),
         )
     }
 

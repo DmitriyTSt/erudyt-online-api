@@ -15,13 +15,17 @@ import ru.erudyt.online.dto.enums.getException
 import ru.erudyt.online.dto.model.CommonResultRow
 import ru.erudyt.online.dto.model.CreatedResult
 import ru.erudyt.online.dto.model.OffsetBasedPageRequest
+import ru.erudyt.online.dto.model.RatingRow
 import ru.erudyt.online.dto.model.UserResultRow
+import ru.erudyt.online.dto.request.RatingRequest
 import ru.erudyt.online.dto.request.SaveResultRequest
 import ru.erudyt.online.dto.response.ResultResponse
 import ru.erudyt.online.entity.api.TokenPairEntity
 import ru.erudyt.online.entity.resource.ResultEntity
 import ru.erudyt.online.mapper.ResultMapper
 import ru.erudyt.online.repository.resource.ResultRepository
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.util.Date
 
 @Service
@@ -60,6 +64,14 @@ class CompetitionResultService @Autowired constructor(
         return ResultResponse(
             resultMapper.fromEntityToDetailModel(result, test)
         )
+    }
+
+    fun getRating(request: RatingRequest): List<RatingRow> = with(request) {
+        return when {
+            day != null && month != null -> getDayRating(year, month, day)
+            month != null -> getMonthRating(year, month)
+            else -> getYearRating(year)
+        }
     }
 
     @Transactional
@@ -216,5 +228,26 @@ class CompetitionResultService @Autowired constructor(
                 c.uppercase()
             }
         }.joinToString("")
+    }
+
+    private fun getDayRating(year: Int, month: Int, day: Int): List<RatingRow> {
+        val date = LocalDateTime.of(year, month, day, 0, 0, 0)
+        val nextDate = date.plusDays(1)
+        val startDay = date.toMillis() / 1000
+        val endDay = nextDate.toMillis() / 1000
+        return resultRepository.getDayRating(startDay, endDay)
+            .mapIndexed { index, entity -> resultMapper.fromEntityToModel(entity, index) }
+    }
+
+    private fun getMonthRating(year: Int, month: Int): List<RatingRow> {
+        TODO("not implemented")
+    }
+
+    private fun getYearRating(year: Int): List<RatingRow> {
+        TODO("not implemented")
+    }
+
+    private fun LocalDateTime.toMillis(): Long {
+        return this.toInstant(ZoneOffset.UTC).toEpochMilli()
     }
 }
