@@ -2,6 +2,8 @@ package ru.erudyt.online.service
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import ru.erudyt.online.dto.enums.ApiError
+import ru.erudyt.online.dto.enums.getException
 import ru.erudyt.online.dto.model.RatingRow
 import ru.erudyt.online.dto.request.RatingRequest
 import ru.erudyt.online.mapper.RatingMapper
@@ -30,7 +32,11 @@ class RatingService @Autowired constructor(
 	}
 
 	private fun getDayRating(year: Int, month: Int, day: Int): List<RatingRow> {
-		val date = LocalDateTime.of(year, month, day, 0, 0, 0)
+		val date = try {
+			LocalDateTime.of(year, month, day, 0, 0, 0)
+		} catch (e: Exception) {
+			throw ApiError.INCORRECT_PERIOD.getException()
+		}
 		val nextDate = date.plusDays(1)
 		val startDay = date.toMillis() / 1000
 		val endDay = nextDate.toMillis() / 1000
@@ -39,12 +45,17 @@ class RatingService @Autowired constructor(
 	}
 
 	private fun getMonthRating(year: Int, month: Int): List<RatingRow> {
+		val now = LocalDateTime.now()
+		if (month < 1 || month > 12) throw ApiError.INCORRECT_PERIOD.getException()
+		if (year > now.year) throw ApiError.NOT_FOUND.getException()
+		if (year == now.year && month > now.monthValue) throw ApiError.NOT_FOUND.getException()
 		return scoreRepository.findAllByIdPeriod(year * 100 + month)
 			.map { ratingMapper.fromEntityToModel(it) }
 			.take(RATING_MONTH_LIMIT)
 	}
 
 	private fun getYearRating(year: Int): List<RatingRow> {
+		if (year >= LocalDateTime.now().year) throw ApiError.NOT_FOUND.getException()
 		return scoreRepository.findAllByIdPeriod(year)
 			.map { ratingMapper.fromEntityToModel(it) }
 			.take(RATING_YEAR_LIMIT)
