@@ -15,13 +15,17 @@ import ru.erudyt.online.dto.enums.getException
 import ru.erudyt.online.dto.model.CommonResultRow
 import ru.erudyt.online.dto.model.CreatedResult
 import ru.erudyt.online.dto.model.OffsetBasedPageRequest
+import ru.erudyt.online.dto.model.RatingRow
 import ru.erudyt.online.dto.model.UserResultRow
+import ru.erudyt.online.dto.request.RatingRequest
 import ru.erudyt.online.dto.request.SaveResultRequest
 import ru.erudyt.online.dto.response.ResultResponse
 import ru.erudyt.online.entity.api.TokenPairEntity
 import ru.erudyt.online.entity.resource.ResultEntity
 import ru.erudyt.online.mapper.ResultMapper
 import ru.erudyt.online.repository.resource.ResultRepository
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.util.Date
 
 @Service

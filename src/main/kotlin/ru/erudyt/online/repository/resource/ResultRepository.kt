@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import ru.erudyt.online.entity.resource.CommonResultInfoEntity
+import ru.erudyt.online.entity.resource.RatingEntity
 import ru.erudyt.online.entity.resource.ResultEntity
 
 interface ResultRepository : JpaRepository<ResultEntity, Long> {
@@ -31,4 +32,30 @@ interface ResultRepository : JpaRepository<ResultEntity, Long> {
     fun getLastId(): Long
 
     fun countByCodeAndResultLessThanEqual(code: String, ball: Int): Int
+
+    @Query(
+        """
+            SELECT email, name, ROUND(score) as score, country
+                  FROM (
+                           SELECT email, name, sum(score) as score, max(date) as date, min(IF(LENGTH(country) > 2, NULL, country)) as country
+                           FROM (
+                                    SELECT
+                                        email,
+                                        name,
+                                        code,
+                                        ((max(result) / max(max_ball)) * 100) as score,
+                                        min(`date`) as `date`,
+                                        min(IF(LENGTH(country) > 2, NULL, country)) as country
+                                    FROM tl_comp_result
+                                    WHERE ?1 <= `date` AND `date` < ?2 AND email rlike '[a-zA-Z0-9\\-_.]+@[a-zA-Z0-9\\-_.]+\\.[a-zA-Z0-9]+'
+                                      AND code < 'C'
+                                    GROUP BY email, code, name
+                                ) as t
+                           GROUP BY email, name
+                           ORDER BY score DESC, `date` ASC, name
+                       ) AS STBL LIMIT ?3
+        """,
+        nativeQuery = true,
+    )
+    fun getDayRating(startDay: Long, endDay: Long, limit: Int): List<RatingEntity>
 }

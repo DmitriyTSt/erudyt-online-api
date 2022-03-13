@@ -14,23 +14,27 @@ import ru.erudyt.online.controller.base.BaseResponse
 import ru.erudyt.online.controller.base.ListResponse
 import ru.erudyt.online.dto.model.CommonResultRow
 import ru.erudyt.online.dto.model.CreatedResult
+import ru.erudyt.online.dto.model.RatingRow
 import ru.erudyt.online.dto.model.UserResultRow
+import ru.erudyt.online.dto.request.RatingRequest
 import ru.erudyt.online.dto.request.SaveResultRequest
 import ru.erudyt.online.dto.response.ResultResponse
 import ru.erudyt.online.service.CompetitionResultService
+import ru.erudyt.online.service.RatingService
 
 @RestController
 @RequestMapping("/api/", produces = [MediaType.APPLICATION_JSON_VALUE])
 class ResultController @Autowired constructor(
     private val resultService: CompetitionResultService,
+    private val ratingService: RatingService,
 ) {
 
     @GetMapping("results")
     fun getCommonResults(
         @RequestParam(required = false) offset: Int?,
         @RequestParam(required = false) limit: Int?,
-    ): ResponseEntity<ListResponse<CommonResultRow>> {
-        return ResponseEntity.ok(resultService.getCommonResult(offset ?: 0, limit ?: 10))
+    ): ResponseEntity<BaseResponse<ListResponse<CommonResultRow>>> {
+        return ResponseEntity.ok(BaseResponse(resultService.getCommonResult(offset ?: 0, limit ?: 10)))
     }
 
     @GetMapping("user/results")
@@ -39,8 +43,17 @@ class ResultController @Autowired constructor(
         @RequestParam(required = false) query: String?,
         @RequestParam(required = false) offset: Int?,
         @RequestParam(required = false) limit: Int?,
-    ): ResponseEntity<ListResponse<UserResultRow>> {
-        return ResponseEntity.ok(resultService.getAnonOrUserResults(email, query, offset ?: 0, limit ?: 10))
+    ): ResponseEntity<BaseResponse<ListResponse<UserResultRow>>> {
+        return ResponseEntity.ok(
+            BaseResponse(
+                resultService.getAnonOrUserResults(
+                    email = email,
+                    query = query,
+                    offset = offset ?: 0,
+                    limit = limit ?: 10,
+                )
+            )
+        )
     }
 
     @GetMapping("result/{id}")
@@ -51,5 +64,10 @@ class ResultController @Autowired constructor(
     @PostMapping("result/save")
     fun saveResult(@RequestBody request: SaveResultRequest): ResponseEntity<BaseResponse<CreatedResult>> {
         return ResponseEntity.ok(BaseResponse((resultService.saveResult(request))))
+    }
+
+    @PostMapping("rating")
+    fun getRating(@RequestBody request: RatingRequest): ResponseEntity<BaseResponse<ListResponse<RatingRow>>> {
+        return ResponseEntity.ok(BaseResponse(ListResponse(ratingService.getRating(request))))
     }
 }

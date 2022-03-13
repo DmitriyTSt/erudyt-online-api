@@ -17,7 +17,7 @@ enum class ApiError(
     SEARCH_EMPTY_EMAIL("Необходимо указать email для поиска"),
     NOT_ALL_ANSWERS("Чтобы принять участие в конкурсе, необходимо дать ответы на все вопросы"),
     TEST_NOT_SUPPORTED("В данный момент этот вид тестов не поддерживается"),
-
+    INCORRECT_PERIOD("Некорректное значение периода"),
 }
 
 fun ApiError.getException() = InternalApiException(httpStatus, name, message)
