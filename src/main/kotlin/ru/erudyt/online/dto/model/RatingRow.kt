@@ -5,4 +5,5 @@ class RatingRow(
     val username: String,
     val score: Int,
     val countryIcon: String?,
+    val oldRank: Int? = null,
 )

@@ -57,15 +57,6 @@ class ResultMapper @Autowired constructor(
         )
     }
 
-    fun fromEntityToModel(entity: RatingEntity, index: Int): RatingRow {
-        return RatingRow(
-            rank = index + 1,
-            username = entity.name,
-            score = entity.score,
-            countryIcon = imageMapper.fromCountryToImage(entity.country),
-        )
-    }
-
     private fun buildAnswers(entity: ResultEntity, test: TestEntity): List<UserResultDetail.Answer> {
         val questions = test.questions.sortedBy { it.id }
         val resultAnswers = entity.answers.split(";").filterIndexed { index, _ -> index % 2 == 1 }

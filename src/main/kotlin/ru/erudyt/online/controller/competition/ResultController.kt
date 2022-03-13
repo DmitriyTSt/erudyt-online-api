@@ -20,11 +20,13 @@ import ru.erudyt.online.dto.request.RatingRequest
 import ru.erudyt.online.dto.request.SaveResultRequest
 import ru.erudyt.online.dto.response.ResultResponse
 import ru.erudyt.online.service.CompetitionResultService
+import ru.erudyt.online.service.RatingService
 
 @RestController
 @RequestMapping("/api/", produces = [MediaType.APPLICATION_JSON_VALUE])
 class ResultController @Autowired constructor(
     private val resultService: CompetitionResultService,
+    private val ratingService: RatingService,
 ) {
 
     @GetMapping("results")
@@ -66,6 +68,6 @@ class ResultController @Autowired constructor(
 
     @PostMapping("rating")
     fun getRating(@RequestBody request: RatingRequest): ResponseEntity<BaseResponse<ListResponse<RatingRow>>> {
-        return ResponseEntity.ok(BaseResponse(ListResponse(resultService.getRating(request))))
+        return ResponseEntity.ok(BaseResponse(ListResponse(ratingService.getRating(request))))
     }
 }
