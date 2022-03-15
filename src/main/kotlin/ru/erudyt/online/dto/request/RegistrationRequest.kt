@@ -15,6 +15,7 @@ class RegistrationRequest(
     val emailAgreement: Boolean,
 ) {
     enum class Gender {
+        NOT_SET,
         MALE,
         FEMALE,
     }

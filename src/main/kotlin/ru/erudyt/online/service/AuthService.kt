@@ -8,9 +8,12 @@ import ru.erudyt.online.dto.enums.Os
 import ru.erudyt.online.dto.enums.getException
 import ru.erudyt.online.dto.model.Device
 import ru.erudyt.online.dto.model.Token
+import ru.erudyt.online.dto.request.RegistrationRequest
 import ru.erudyt.online.entity.api.AnonymousProfileEntity
 import ru.erudyt.online.entity.resource.UserEntity
 import ru.erudyt.online.repository.api.AnonymousProfileRepository
+import java.security.MessageDigest
+import java.util.UUID
 
 @Service
 class AuthService @Autowired constructor(
@@ -36,18 +39,27 @@ class AuthService @Autowired constructor(
     }
 
     // TODO refactor
-    fun registration(login: String, password: String): Token {
+    fun registration(request: RegistrationRequest): Token {
         val currentTokenPair = tokenService.getCurrentTokenPair()
         val anonymousProfile = anonymousProfileRepository.findByDeviceIdAndIsActiveIsTrue(currentTokenPair.deviceId)
             ?: throw ApiError.ANONYM_NOT_EXISTS.getException()
+        val activation = UUID.randomUUID().toString().let { uniqId ->
+            MessageDigest.getInstance("MD5").digest(uniqId.toByteArray()).toHexString().lowercase()
+        }
         val userProfile = userService.create(
             UserEntity(
-                username = login,
-                password = password,
-                firstName = "",
-                lastName = "",
-                email = login,
-                middleName = ""
+                username = request.email,
+                password = request.password,
+                firstName = request.name,
+                lastName = request.surname,
+                email = request.email,
+                middleName = request.patronymic.orEmpty(),
+                activation = activation,
+                disable = "1",
+                city = request.city,
+                country = request.country,
+                emailAgreement = if (request.emailAgreement) "1" else "",
+                loginCount = 3,
             )
         )
         return tokenService.createToken(userProfile.id, anonymousProfile.deviceId, false, anonymousProfile.os)
@@ -78,5 +90,11 @@ class AuthService @Autowired constructor(
             os = device.os,
         )
         return anonymousProfileRepository.save(user)
+    }
+
+    private fun ByteArray.toHexString(): String {
+        val sb = StringBuilder()
+        for (b in this) sb.append(String.format("%02x", b.toInt() and 0xFF))
+        return sb.toString()
     }
 }
