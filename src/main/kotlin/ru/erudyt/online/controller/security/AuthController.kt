@@ -33,7 +33,7 @@ class AuthController @Autowired constructor(
 
     @PostMapping("/registration")
     fun registration(@RequestBody request: RegistrationRequest): ResponseEntity<BaseResponse<Token>> {
-        return ResponseEntity.ok(BaseResponse(authService.registration(request.login, request.password)))
+        return ResponseEntity.ok(BaseResponse(authService.registration(request.email, request.password)))
     }
 
     @PostMapping("/refresh")
