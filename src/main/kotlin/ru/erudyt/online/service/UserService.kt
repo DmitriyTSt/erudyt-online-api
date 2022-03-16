@@ -24,6 +24,10 @@ class UserService @Autowired constructor(
         return repository.save(userEntity)
     }
 
+    fun getByActivationToken(token: String): UserEntity {
+        return repository.findByActivation(token) ?: throw ApiError.NOT_FOUND.getException()
+    }
+
     fun getLastId(): Long {
         return repository.getLastId()
     }

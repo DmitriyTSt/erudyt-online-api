@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import ru.erudyt.online.controller.base.BaseResponse
 import ru.erudyt.online.controller.base.EmptyResponse
@@ -43,6 +44,11 @@ class AuthController @Autowired constructor(
     @PostMapping("/registration")
     fun registration(@RequestBody request: RegistrationRequest): ResponseEntity<EmptyResponse> {
         return ResponseEntity.ok(authService.registration(request))
+    }
+
+    @GetMapping("/confirm")
+    fun confirmEmail(@RequestParam("token") token: String): ResponseEntity<EmptyResponse> {
+        return ResponseEntity.ok(authService.confirmEmail(token))
     }
 
     @PostMapping("/refresh")

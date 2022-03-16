@@ -118,7 +118,7 @@ class AuthService @Autowired constructor(
             throw ApiError.AUTH_LOCKED_BY_LOGIN_COUNT.getException()
         }
         if (userEntity.disable == "1") {
-            throw ApiError.AUTH_ERROR.getException()
+            throw ApiError.AUTH_NOT_CONFIRMED.getException()
         }
         if (userEntity.login != "1") {
             throw ApiError.AUTH_ERROR.getException()
@@ -181,6 +181,17 @@ class AuthService @Autowired constructor(
             throw ApiError.ERROR_SEND_CONFIRM_MESSAGE.getException()
         }
 
+        return EmptyResponse()
+    }
+
+    fun confirmEmail(token: String): EmptyResponse {
+        val time = LocalDateTime.now().atOffset(ZoneOffset.UTC).toEpochSecond()
+        val userEntity = userService.getByActivationToken(token)
+        userEntity.apply {
+            disable = ""
+            activation = ""
+        }
+        userService.save(userEntity)
         return EmptyResponse()
     }
 
