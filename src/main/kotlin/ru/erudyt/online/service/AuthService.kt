@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import ru.erudyt.online.controller.base.EmptyResponse
 import ru.erudyt.online.dto.enums.ApiError
 import ru.erudyt.online.dto.enums.Os
 import ru.erudyt.online.dto.enums.getException
@@ -19,15 +20,19 @@ import java.security.MessageDigest
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.UUID
+import java.util.regex.Pattern
 
 private const val DEFAULT_LOGIN_COUNT = 3
 private const val LOCK_PERIOD_SECONDS = 60
+private const val MIN_PASSWORD_LENGTH = 8
 
 @Service
 class AuthService @Autowired constructor(
     private val tokenService: TokenService,
     private val userService: UserService,
     private val anonymousProfileRepository: AnonymousProfileRepository,
+    private val countryService: CountryService,
+    private val validatorService: ValidatorService,
 ) {
     fun createAnonym(device: Device): AnonymTokenResponse {
         val profile = anonymousProfileRepository
@@ -39,7 +44,6 @@ class AuthService @Autowired constructor(
         return AnonymTokenResponse(tokenService.createToken(profile.id, device.id, true, device.os))
     }
 
-    @Transactional
     fun logout(): AnonymTokenResponse {
         val currentToken = tokenService.getCurrentTokenPair()
         if (currentToken.isAnonym) {
@@ -131,13 +135,21 @@ class AuthService @Autowired constructor(
         }
     }
 
-    // TODO refactor
-    fun registration(request: RegistrationRequest): Token {
+    fun registration(request: RegistrationRequest): EmptyResponse {
         val currentTokenPair = tokenService.getCurrentTokenPair()
         val anonymousProfile = anonymousProfileRepository.findByDeviceIdAndIsActiveIsTrue(currentTokenPair.deviceId)
             ?: throw ApiError.ANONYM_NOT_EXISTS.getException()
         val activation = UUID.randomUUID().toString().let { uniqId ->
             MessageDigest.getInstance("MD5").digest(uniqId.toByteArray()).toHexString().lowercase()
+        }
+        if (!countryService.getCountries().map { it.code }.contains(request.country)) {
+            throw ApiError.COUNTRY_NOT_FOUND.getException()
+        }
+        if (!validatorService.isEmail(request.email)) {
+            throw ApiError.WRONG_EMAIL.getException()
+        }
+        if (request.password.length < MIN_PASSWORD_LENGTH) {
+            throw ApiError.PASSWORD_INCORRECT_MIN.getException()
         }
         val userProfile = userService.create(
             UserEntity(
@@ -145,6 +157,11 @@ class AuthService @Autowired constructor(
                 password = request.password,
                 firstName = request.name,
                 lastName = request.surname,
+                gender = when (request.gender) {
+                    RegistrationRequest.Gender.NOT_SET -> ""
+                    RegistrationRequest.Gender.MALE -> "male"
+                    RegistrationRequest.Gender.FEMALE -> "female"
+                },
                 email = request.email,
                 middleName = request.patronymic.orEmpty(),
                 activation = activation,
@@ -152,10 +169,10 @@ class AuthService @Autowired constructor(
                 city = request.city,
                 country = request.country,
                 emailAgreement = if (request.emailAgreement) "1" else "",
-                loginCount = 3,
+                loginCount = DEFAULT_LOGIN_COUNT,
             )
         )
-        return tokenService.createToken(userProfile.id, anonymousProfile.deviceId, false, anonymousProfile.os)
+        return EmptyResponse()
     }
 
     fun refreshToken(deviceId: String, refreshToken: String): Token {

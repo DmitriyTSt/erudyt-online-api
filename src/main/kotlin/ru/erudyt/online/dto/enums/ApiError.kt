@@ -22,6 +22,10 @@ enum class ApiError(
     TEST_NOT_SUPPORTED("В данный момент этот вид тестов не поддерживается"),
     INCORRECT_PERIOD("Некорректное значение периода"),
     PROFILE_NOT_EXISTS("Профиль не существует"),
+    COUNTRY_NOT_FOUND("Страна не найдена"),
+    WRONG_EMAIL("Некорректный email"),
+    WRONG_PHONE("Некорректный телефон"),
+    PASSWORD_INCORRECT_MIN("Минимальная длина пароля 8 символов"),
 }
 
 fun ApiError.getException() = InternalApiException(httpStatus, name, message)

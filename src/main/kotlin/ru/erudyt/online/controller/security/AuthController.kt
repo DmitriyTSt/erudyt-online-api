@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import ru.erudyt.online.controller.base.BaseResponse
+import ru.erudyt.online.controller.base.EmptyResponse
 import ru.erudyt.online.dto.model.Token
 import ru.erudyt.online.dto.request.DeviceRequest
 import ru.erudyt.online.dto.request.LoginRequest
@@ -40,8 +41,8 @@ class AuthController @Autowired constructor(
     }
 
     @PostMapping("/registration")
-    fun registration(@RequestBody request: RegistrationRequest): ResponseEntity<BaseResponse<Token>> {
-        return ResponseEntity.ok(BaseResponse(authService.registration(request)))
+    fun registration(@RequestBody request: RegistrationRequest): ResponseEntity<EmptyResponse> {
+        return ResponseEntity.ok(authService.registration(request))
     }
 
     @PostMapping("/refresh")
