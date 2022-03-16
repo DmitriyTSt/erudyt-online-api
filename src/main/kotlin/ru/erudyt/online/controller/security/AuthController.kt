@@ -13,6 +13,7 @@ import ru.erudyt.online.dto.request.DeviceRequest
 import ru.erudyt.online.dto.request.LoginRequest
 import ru.erudyt.online.dto.request.RefreshTokenRequest
 import ru.erudyt.online.dto.request.RegistrationRequest
+import ru.erudyt.online.dto.response.LoginResponse
 import ru.erudyt.online.service.AuthService
 
 @RestController
@@ -27,7 +28,7 @@ class AuthController @Autowired constructor(
     }
 
     @PostMapping("/login")
-    fun login(@RequestBody request: LoginRequest): ResponseEntity<BaseResponse<Token>> {
+    fun login(@RequestBody request: LoginRequest): ResponseEntity<BaseResponse<LoginResponse>> {
         return ResponseEntity.ok(BaseResponse(authService.login(request.login, request.password)))
     }
 

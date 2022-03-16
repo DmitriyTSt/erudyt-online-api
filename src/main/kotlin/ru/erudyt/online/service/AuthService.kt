@@ -9,11 +9,17 @@ import ru.erudyt.online.dto.enums.getException
 import ru.erudyt.online.dto.model.Device
 import ru.erudyt.online.dto.model.Token
 import ru.erudyt.online.dto.request.RegistrationRequest
+import ru.erudyt.online.dto.response.LoginResponse
 import ru.erudyt.online.entity.api.AnonymousProfileEntity
 import ru.erudyt.online.entity.resource.UserEntity
 import ru.erudyt.online.repository.api.AnonymousProfileRepository
 import java.security.MessageDigest
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.util.UUID
+
+private const val DEFAULT_LOGIN_COUNT = 3
+private const val LOCK_PERIOD_SECONDS = 60
 
 @Service
 class AuthService @Autowired constructor(
@@ -29,13 +35,68 @@ class AuthService @Autowired constructor(
         return tokenService.createToken(profile.id, device.id, true, device.os)
     }
 
-    fun login(login: String, password: String): Token {
+    fun login(login: String, password: String): LoginResponse {
         val currentTokenPair = tokenService.getCurrentTokenPair()
         val anonymousProfile = anonymousProfileRepository.findByDeviceIdAndIsActiveIsTrue(currentTokenPair.deviceId)
             ?: throw ApiError.ANONYM_NOT_EXISTS.getException()
-        val userProfile = userService.findByLoginAndPassword(login, password)
+        val userEntity = userService.findByLogin(login)
             ?: throw ApiError.AUTH_ERROR.getException()
-        return tokenService.createToken(userProfile.id, anonymousProfile.deviceId, false, anonymousProfile.os)
+        val time = LocalDateTime.now().atOffset(ZoneOffset.UTC).toEpochSecond()
+
+        if (userEntity.loginCount < 1) {
+            userEntity.locked = time
+            userEntity.loginCount = DEFAULT_LOGIN_COUNT
+            userService.save(userEntity)
+            // TODO log login count limit
+            throw ApiError.AUTH_ERROR.getException()
+        }
+
+        checkAccess(userEntity)
+
+        val userProfile = userService.findByLoginAndPassword(login, password)
+        if (userProfile == null) {
+            userEntity.loginCount--
+            userService.save(userEntity)
+            throw ApiError.AUTH_ERROR.getException()
+        }
+        userProfile.apply {
+            lastLogin = currentLogin
+            currentLogin = time
+            loginCount = DEFAULT_LOGIN_COUNT
+        }
+        userService.save(userProfile)
+        return LoginResponse(
+            tokenService.createToken(
+                userId = userProfile.id,
+                deviceId = anonymousProfile.deviceId,
+                isAnonym = false,
+                os = anonymousProfile.os
+            )
+        )
+    }
+
+    private fun checkAccess(userEntity: UserEntity) {
+        val time = LocalDateTime.now().atOffset(ZoneOffset.UTC).toEpochSecond()
+        if (userEntity.locked + LOCK_PERIOD_SECONDS > time) {
+            throw ApiError.AUTH_LOCKED_BY_LOGIN_COUNT.getException()
+        }
+        if (userEntity.disable == "1") {
+            throw ApiError.AUTH_ERROR.getException()
+        }
+        if (userEntity.login != "1") {
+            throw ApiError.AUTH_ERROR.getException()
+        }
+        val timeFloorToMinute = floorToMinute(time)
+        userEntity.start.toLongOrNull()?.let { start ->
+            if (start > timeFloorToMinute) {
+                throw ApiError.AUTH_ERROR.getException()
+            }
+        }
+        userEntity.stop.toLongOrNull()?.let { stop ->
+            if (stop <= (timeFloorToMinute + 60)) {
+                throw ApiError.AUTH_ERROR.getException()
+            }
+        }
     }
 
     // TODO refactor
@@ -96,5 +157,9 @@ class AuthService @Autowired constructor(
         val sb = StringBuilder()
         for (b in this) sb.append(String.format("%02x", b.toInt() and 0xFF))
         return sb.toString()
+    }
+
+    private fun floorToMinute(time: Long): Long {
+        return time - (time % 60)
     }
 }
