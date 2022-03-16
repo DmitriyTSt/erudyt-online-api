@@ -24,6 +24,10 @@ class UserService @Autowired constructor(
         return repository.save(userEntity)
     }
 
+    fun getLastId(): Long {
+        return repository.getLastId()
+    }
+
     fun save(userEntity: UserEntity): UserEntity {
         return repository.save(userEntity)
     }

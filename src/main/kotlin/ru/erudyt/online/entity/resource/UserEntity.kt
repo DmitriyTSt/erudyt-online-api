@@ -13,8 +13,7 @@ import javax.persistence.Table
 @Table(name = "tl_member")
 class UserEntity(
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    val id: Long = 0, // TODO use normal autoincrement id
+    val id: Long, // TODO use normal autoincrement id
     val account: Int = 0,
     @Column(name = "firstname") val firstName: String,
     @Column(name = "lastname") val lastName: String,
@@ -54,4 +53,8 @@ class UserEntity(
     val newsletter: String = "",
     @Column(name = "email_agreement") val emailAgreement: String,
     val tstamp: Long = LocalDateTime.now().atOffset(ZoneOffset.UTC).toEpochSecond(),
-)
+) {
+    companion object {
+        const val TABLE_NAME = "tl_member"
+    }
+}

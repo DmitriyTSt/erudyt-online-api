@@ -33,6 +33,7 @@ class AuthService @Autowired constructor(
     private val anonymousProfileRepository: AnonymousProfileRepository,
     private val countryService: CountryService,
     private val validatorService: ValidatorService,
+    private val mailService: MailService,
 ) {
     fun createAnonym(device: Device): AnonymTokenResponse {
         val profile = anonymousProfileRepository
@@ -151,8 +152,10 @@ class AuthService @Autowired constructor(
         if (request.password.length < MIN_PASSWORD_LENGTH) {
             throw ApiError.PASSWORD_INCORRECT_MIN.getException()
         }
+        val lastUserId = userService.getLastId()
         val userProfile = userService.create(
             UserEntity(
+                id = lastUserId + 1,
                 username = request.email,
                 password = request.password,
                 firstName = request.name,
@@ -172,6 +175,12 @@ class AuthService @Autowired constructor(
                 loginCount = DEFAULT_LOGIN_COUNT,
             )
         )
+        try {
+            mailService.sendConfirmEmail(request.email, activation)
+        } catch (e: Exception) {
+            throw ApiError.ERROR_SEND_CONFIRM_MESSAGE.getException()
+        }
+
         return EmptyResponse()
     }
 

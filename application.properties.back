@@ -9,3 +9,14 @@ resource.datasource.password=
 resource.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 
 spring.mvc.pathmatch.matching-strategy=ANT_PATH_MATCHER
+
+erudyt.admin.email=info@erudyt-online.ru
+erudyt.admin.name=info
+
+spring.mail.host=
+spring.mail.port=
+spring.mail.username=
+spring.mail.password=
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.ssl.enable=true
+spring.mail.properties.mail.debug=true

@@ -8,7 +8,7 @@ import javax.persistence.Table
 @Entity
 @Table(name = "tl_comp_result")
 class ResultEntity(
-    @Id val id: Long,
+    @Id val id: Long, // TODO use normal autoincrement id
     val date: Long,
     val paid: String,
     val code: String,
