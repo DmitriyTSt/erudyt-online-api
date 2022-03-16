@@ -60,6 +60,10 @@ class TokenService @Autowired constructor(
         }
     }
 
+    fun save(tokenPairEntity: TokenPairEntity) {
+        repository.save(tokenPairEntity)
+    }
+
     private fun buildToken(userId: Long, deviceId: String, isAnonym: Boolean, os: Os): TokenPairEntity {
         return TokenPairEntity(
             accessToken = createAccessToken(deviceId),

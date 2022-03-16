@@ -16,7 +16,7 @@ class AnonymousProfileEntity(
     val id: Long = 0,
     val deviceId: String,
     var os: Os,
-    val isActive: Boolean = true,
+    var isActive: Boolean = true,
     val createdAt: LocalDateTime = LocalDateTime.now(),
     val updatedAt: LocalDateTime = LocalDateTime.now(),
     /** Записывается email для нахождения результатов при сборке рекомендаций */

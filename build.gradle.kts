@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "2.6.2"
+    id("org.springframework.boot") version "2.6.4"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     kotlin("jvm") version "1.6.0"
     kotlin("plugin.spring") version "1.6.0"
@@ -20,10 +20,11 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
-    val springBootVersion = "2.6.3"
+    val springBootVersion = "2.6.4"
     implementation("org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-security:$springBootVersion")
+    implementation("org.springframework.boot:spring-boot-starter-mail:$springBootVersion")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor:$springBootVersion")
 
     implementation("io.springfox:springfox-swagger2:3.0.0")
@@ -34,7 +35,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
     implementation("com.google.code.gson:gson:2.9.0")
 
-    runtimeOnly("mysql:mysql-connector-java:8.0.25")
+    runtimeOnly("mysql:mysql-connector-java:8.0.28")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
 }
