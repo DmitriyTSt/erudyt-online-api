@@ -21,6 +21,7 @@ enum class ApiError(
     NOT_ALL_ANSWERS("Чтобы принять участие в конкурсе, необходимо дать ответы на все вопросы"),
     TEST_NOT_SUPPORTED("В данный момент этот вид тестов не поддерживается"),
     INCORRECT_PERIOD("Некорректное значение периода"),
+    PROFILE_NOT_EXISTS("Профиль не существует"),
 }
 
 fun ApiError.getException() = InternalApiException(httpStatus, name, message)

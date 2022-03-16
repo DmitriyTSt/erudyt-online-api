@@ -3,12 +3,14 @@ package ru.erudyt.online.service
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import ru.erudyt.online.dto.enums.ApiError
 import ru.erudyt.online.dto.enums.Os
 import ru.erudyt.online.dto.enums.getException
 import ru.erudyt.online.dto.model.Device
 import ru.erudyt.online.dto.model.Token
 import ru.erudyt.online.dto.request.RegistrationRequest
+import ru.erudyt.online.dto.response.AnonymTokenResponse
 import ru.erudyt.online.dto.response.LoginResponse
 import ru.erudyt.online.entity.api.AnonymousProfileEntity
 import ru.erudyt.online.entity.resource.UserEntity
@@ -27,12 +29,40 @@ class AuthService @Autowired constructor(
     private val userService: UserService,
     private val anonymousProfileRepository: AnonymousProfileRepository,
 ) {
-    fun createAnonym(device: Device): Token {
+    fun createAnonym(device: Device): AnonymTokenResponse {
         val profile = anonymousProfileRepository
             .findByDeviceId(device.id)
-            ?.let { updateAnonymousUserOs(it, device.os) }
+            ?.let {
+                updateAnonymousUser(it, device.os)
+            }
             ?: createAnonymousUser(device)
-        return tokenService.createToken(profile.id, device.id, true, device.os)
+        return AnonymTokenResponse(tokenService.createToken(profile.id, device.id, true, device.os))
+    }
+
+    @Transactional
+    fun logout(): AnonymTokenResponse {
+        val currentToken = tokenService.getCurrentTokenPair()
+        if (currentToken.isAnonym) {
+            throw ApiError.TOKEN_BELONGS_ANONYM.getException()
+        }
+        if (!currentToken.isActive) {
+            throw ApiError.WRONG_TOKEN.getException()
+        }
+        val anonProfile = anonymousProfileRepository.findByDeviceId(currentToken.deviceId)
+            ?: throw ApiError.PROFILE_NOT_EXISTS.getException()
+        currentToken.isActive = false
+        tokenService.save(currentToken)
+        anonProfile.isActive = true
+        anonymousProfileRepository.save(anonProfile)
+
+        return AnonymTokenResponse(
+            tokenService.createToken(
+                userId = anonProfile.id,
+                deviceId = anonProfile.deviceId,
+                isAnonym = true,
+                os = anonProfile.os
+            )
+        )
     }
 
     fun login(login: String, password: String): LoginResponse {
@@ -65,6 +95,8 @@ class AuthService @Autowired constructor(
             loginCount = DEFAULT_LOGIN_COUNT
         }
         userService.save(userProfile)
+        anonymousProfile.isActive = false
+        anonymousProfileRepository.save(anonymousProfile)
         return LoginResponse(
             tokenService.createToken(
                 userId = userProfile.id,
@@ -140,8 +172,9 @@ class AuthService @Autowired constructor(
         return anonymousProfileRepository.save(user)
     }
 
-    private fun updateAnonymousUserOs(user: AnonymousProfileEntity, os: Os): AnonymousProfileEntity {
+    private fun updateAnonymousUser(user: AnonymousProfileEntity, os: Os): AnonymousProfileEntity {
         user.os = os
+        user.isActive = true
         return anonymousProfileRepository.save(user)
     }
 

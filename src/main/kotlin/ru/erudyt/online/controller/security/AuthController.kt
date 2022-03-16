@@ -3,6 +3,7 @@ package ru.erudyt.online.controller.security
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -13,6 +14,7 @@ import ru.erudyt.online.dto.request.DeviceRequest
 import ru.erudyt.online.dto.request.LoginRequest
 import ru.erudyt.online.dto.request.RefreshTokenRequest
 import ru.erudyt.online.dto.request.RegistrationRequest
+import ru.erudyt.online.dto.response.AnonymTokenResponse
 import ru.erudyt.online.dto.response.LoginResponse
 import ru.erudyt.online.service.AuthService
 
@@ -23,13 +25,18 @@ class AuthController @Autowired constructor(
 ) {
 
     @PostMapping("/anonym")
-    fun createAnonym(@RequestBody request: DeviceRequest): ResponseEntity<BaseResponse<Token>> {
+    fun createAnonym(@RequestBody request: DeviceRequest): ResponseEntity<BaseResponse<AnonymTokenResponse>> {
         return ResponseEntity.ok(BaseResponse(authService.createAnonym(request.device)))
     }
 
     @PostMapping("/login")
     fun login(@RequestBody request: LoginRequest): ResponseEntity<BaseResponse<LoginResponse>> {
         return ResponseEntity.ok(BaseResponse(authService.login(request.login, request.password)))
+    }
+
+    @GetMapping("/logout")
+    fun logout(): ResponseEntity<BaseResponse<AnonymTokenResponse>> {
+        return ResponseEntity.ok(BaseResponse(authService.logout()))
     }
 
     @PostMapping("/registration")
