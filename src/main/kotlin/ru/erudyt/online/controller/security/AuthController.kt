@@ -18,6 +18,7 @@ import ru.erudyt.online.dto.request.RefreshTokenRequest
 import ru.erudyt.online.dto.request.RegistrationRequest
 import ru.erudyt.online.dto.response.AnonymTokenResponse
 import ru.erudyt.online.dto.response.LoginResponse
+import ru.erudyt.online.dto.response.RefreshResponse
 import ru.erudyt.online.service.AuthService
 
 @RestController
@@ -52,7 +53,7 @@ class AuthController @Autowired constructor(
     }
 
     @PostMapping("/refresh")
-    fun refreshToken(@RequestBody request: RefreshTokenRequest): ResponseEntity<BaseResponse<Token>> {
+    fun refreshToken(@RequestBody request: RefreshTokenRequest): ResponseEntity<BaseResponse<RefreshResponse>> {
         return ResponseEntity.ok(BaseResponse(authService.refreshToken(request.deviceId, request.refreshToken)))
     }
 }

@@ -13,6 +13,7 @@ import ru.erudyt.online.dto.model.Token
 import ru.erudyt.online.dto.request.RegistrationRequest
 import ru.erudyt.online.dto.response.AnonymTokenResponse
 import ru.erudyt.online.dto.response.LoginResponse
+import ru.erudyt.online.dto.response.RefreshResponse
 import ru.erudyt.online.entity.api.AnonymousProfileEntity
 import ru.erudyt.online.entity.resource.UserEntity
 import ru.erudyt.online.repository.api.AnonymousProfileRepository
@@ -195,8 +196,10 @@ class AuthService @Autowired constructor(
         return EmptyResponse()
     }
 
-    fun refreshToken(deviceId: String, refreshToken: String): Token {
-        return tokenService.refreshToken(deviceId, refreshToken)
+    fun refreshToken(deviceId: String, refreshToken: String): RefreshResponse {
+        return RefreshResponse(
+            tokenService.refreshToken(deviceId, refreshToken)
+        )
     }
 
     fun getAnonymousProfile(id: Long): AnonymousProfileEntity {
