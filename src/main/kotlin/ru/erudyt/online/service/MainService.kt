@@ -17,14 +17,14 @@ class MainService(
             ),
             MainSection.CompetitionItemsBlock(
                 title = "Новые конкурсы",
-                viewType = CompetitionViewType.ROW,
-                items = competitionItemService.getItems(null, emptyList(), emptyList(), 0, 5).list,
+                competitionViewType = CompetitionViewType.ROW,
+                competitionItems = competitionItemService.getItems(null, emptyList(), emptyList(), 0, 5).list,
             ),
             recommendationService.getRecommendation().takeIf { it.isNotEmpty() }?.let { recommendations ->
                 MainSection.CompetitionItemsBlock(
                     title = "Рекомендации",
-                    viewType = CompetitionViewType.CARD,
-                    items = recommendations,
+                    competitionViewType = CompetitionViewType.CARD,
+                    competitionItems = recommendations,
                 )
             },
         )
@@ -36,11 +36,13 @@ class MainService(
                 title = "Мгновенный диплом!",
                 text = "Результат и наградные материалы доступны сразу после прохождения конкурса",
                 icon = "https://erudit-online.ru/files/design/slogan_green.png",
+                titleColor = "#8BC34A",
             ),
             Tagline(
                 title = "Отличное портфолио!",
                 text = "Диплом участнику грамота руководителю = 100р. Именные медали",
                 icon = "https://erudit-online.ru/files/design/slogan_orange.png",
+                titleColor = "#FFA726",
             )
         )
     }

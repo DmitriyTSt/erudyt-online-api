@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import ru.erudyt.online.controller.base.BaseResponse
 import ru.erudyt.online.controller.base.ListResponse
 import ru.erudyt.online.dto.model.MainSection
 import ru.erudyt.online.service.MainService
@@ -16,7 +17,7 @@ class MainController @Autowired constructor(
     private val mainService: MainService,
 ) {
     @GetMapping("main")
-    fun main(): ResponseEntity<ListResponse<MainSection>> {
-        return ResponseEntity.ok(ListResponse(mainService.getMain()))
+    fun main(): ResponseEntity<BaseResponse<ListResponse<MainSection>>> {
+        return ResponseEntity.ok(BaseResponse(ListResponse(mainService.getMain())))
     }
 }

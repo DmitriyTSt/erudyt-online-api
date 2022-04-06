@@ -4,4 +4,5 @@ class Tagline(
     val title: String,
     val text: String,
     val icon: String,
+    val titleColor: String,
 )

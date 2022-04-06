@@ -9,7 +9,7 @@ sealed class MainSection(
 
     class CompetitionItemsBlock(
         val title: String,
-        val viewType: CompetitionViewType,
-        val items: List<CompetitionItemShort>,
+        val competitionViewType: CompetitionViewType,
+        val competitionItems: List<CompetitionItemShort>,
     ) : MainSection(MainSectionType.COMPETITION_ITEM)
 }
