@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "ru.dmitriyt"
-version = "0.0.1-SNAPSHOT"
+version = "0.0.1"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
@@ -49,4 +49,35 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+val appName = "erudite-online-api"
+val appVer by lazy { "$version-${gitRev()}" }
+
+springBoot {
+    buildInfo {
+        properties {
+            artifact = "$appName-$appVer.jar"
+            version = appVer
+            name = appName
+        }
+    }
+}
+
+tasks.bootJar {
+    manifest {
+        attributes("Multi-Release" to true)
+    }
+
+    archiveBaseName.set(appName)
+    archiveVersion.set(appVer)
+
+    if (project.hasProperty("archiveName")) {
+        archiveFileName.set(project.properties["archiveName"] as String)
+    }
+}
+
+fun gitRev() = ProcessBuilder("git", "rev-list", "--count", "HEAD").start().let { p ->
+    p.waitFor(100, TimeUnit.MILLISECONDS)
+    p.inputStream.bufferedReader().readLine() ?: "0"
 }
