@@ -1,6 +1,7 @@
 package ru.erudyt.online.controller.competition
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -9,7 +10,10 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import ru.erudyt.online.config.EnvSettings
 import ru.erudyt.online.controller.base.BaseResponse
+import ru.erudyt.online.dto.enums.ApiError
+import ru.erudyt.online.dto.enums.getException
 import ru.erudyt.online.dto.request.CheckTestRequest
 import ru.erudyt.online.dto.response.CheckTestResponse
 import ru.erudyt.online.dto.response.CompetitionTestResponse
@@ -19,14 +23,19 @@ import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("/api/competition/", produces = [MediaType.APPLICATION_JSON_VALUE])
+@EnableConfigurationProperties(EnvSettings::class)
 class TestController @Autowired constructor(
     private val testService: TestService,
+    private val envSettings: EnvSettings,
 ) {
 
-    // TODO remove method
     @GetMapping("rawTestEntity/{code}")
     fun getRawTest(@PathVariable("code") code: String): ResponseEntity<BaseResponse<TestEntity>> {
-        return ResponseEntity.ok(BaseResponse(testService.getRawTest(code)))
+        if (envSettings.env == EnvSettings.DEV) {
+            return ResponseEntity.ok(BaseResponse(testService.getRawTest(code)))
+        } else {
+            throw ApiError.NOT_AVAILABLE_BY_ENV.getException()
+        }
     }
 
     @GetMapping("/test/{id}")
