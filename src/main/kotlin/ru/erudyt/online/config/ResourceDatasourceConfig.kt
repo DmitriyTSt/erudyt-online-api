@@ -1,7 +1,9 @@
 package ru.erudyt.online.config
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.context.properties.ConfigurationProperties
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.jdbc.DataSourceBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -22,7 +24,10 @@ import javax.sql.DataSource
 	basePackages = ["ru.erudyt.online.repository.resource"]
 )
 @EnableTransactionManagement
-class ResourceDatasourceConfig {
+@EnableConfigurationProperties(DialectSettings::class)
+class ResourceDatasourceConfig @Autowired constructor(
+	private val dialectSettings: DialectSettings,
+) {
 
 	companion object {
 		private const val ENTITY_PACKAGE = "ru.erudyt.online.entity.resource"
@@ -47,7 +52,7 @@ class ResourceDatasourceConfig {
 			jpaVendorAdapter = HibernateJpaVendorAdapter()
 			setJpaPropertyMap(
 				mapOf(
-					"hibernate.dialect" to "org.hibernate.dialect.MySQL5Dialect",
+					"hibernate.dialect" to dialectSettings.resourceDialect,
 //					"hibernate.show_sql" to "true",
 				)
 			)
