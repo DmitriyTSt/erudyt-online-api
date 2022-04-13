@@ -13,6 +13,7 @@ import ru.erudyt.online.controller.base.BaseResponse
 import ru.erudyt.online.dto.model.CompetitionItem
 import ru.erudyt.online.dto.request.CompetitionFilterRequest
 import ru.erudyt.online.dto.response.CompetitionFilterResponse
+import ru.erudyt.online.dto.response.CompetitionItemResponse
 import ru.erudyt.online.service.CompetitionItemService
 
 @RestController
@@ -38,7 +39,7 @@ class CompetitionController @Autowired constructor(
     }
 
     @GetMapping("item/{id}")
-    fun getItem(@PathVariable("id") id: Long): ResponseEntity<BaseResponse<CompetitionItem>> {
-        return ResponseEntity.ok(BaseResponse(service.getItem(id)))
+    fun getItem(@PathVariable("id") id: Long): ResponseEntity<BaseResponse<CompetitionItemResponse>> {
+        return ResponseEntity.ok(BaseResponse(CompetitionItemResponse(service.getItem(id))))
     }
 }
