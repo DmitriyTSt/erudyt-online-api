@@ -5,11 +5,45 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import ru.erudyt.online.config.DomainSettings
 import ru.erudyt.online.dto.model.WebPage
+import ru.erudyt.online.dto.model.WebPageItem
 
 @Service
 class WebPageService @Autowired constructor(
     private val domainSettings: DomainSettings,
 ) {
+    fun getInformationPages(): List<WebPageItem> {
+        return listOf(
+            WebPageItem(
+                path = "rules.html",
+                name = "Правила",
+            ),
+            WebPageItem(
+                path = "faq.html",
+                name = "Вопрос-ответ",
+            ),
+            WebPageItem(
+                path = "reviews.html",
+                name = "Отзывы",
+            ),
+            WebPageItem(
+                path = "news.html",
+                name = "Новости",
+            ),
+            WebPageItem(
+                path = "contacts.html",
+                name = "Контакты",
+            ),
+            WebPageItem(
+                path = "smi.html",
+                name = "Мы в СМИ",
+            ),
+            WebPageItem(
+                path = "links.html",
+                name = "Ресурсы",
+            ),
+        )
+    }
+
     fun getPage(path: String): WebPage {
         val fixedPath = if (path.firstOrNull() == '/') {
             path.substring(1)
