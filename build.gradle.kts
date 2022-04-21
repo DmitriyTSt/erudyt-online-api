@@ -34,6 +34,7 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt:0.9.1")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
     implementation("com.google.code.gson:gson:2.9.0")
+    implementation("org.jsoup:jsoup:1.10.2")
 
     runtimeOnly("mysql:mysql-connector-java:8.0.28")
     runtimeOnly("org.mariadb.jdbc:mariadb-java-client:3.0.3")
