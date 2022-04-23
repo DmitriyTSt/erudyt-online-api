@@ -90,7 +90,7 @@ class CompetitionResultService @Autowired constructor(
             code = tempResult.code,
             place = tempResult.place,
             competitionTitle = tempResult.competitionTitle,
-            name = fixFio("${request.surname} ${request.name} ${request.patronymic}"),
+            name = fixFio("${request.surname} ${request.name} ${request.patronymic.orEmpty()}"),
             email = email,
             school = fixSchoolOrPosition(request.school.orEmpty()),
             country = request.country,
