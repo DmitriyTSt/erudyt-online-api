@@ -16,7 +16,7 @@ class UserMapper {
             patronymic = entity.middleName.takeIf { it.isNotEmpty() },
             school = entity.company.takeIf { it.isNotEmpty() },
             city = entity.city,
-            region = entity.state,
+            region = entity.state.takeIf { it.isNotEmpty() },
             country = country,
             avatar = null,
         )
