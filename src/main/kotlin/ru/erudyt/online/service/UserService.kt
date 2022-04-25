@@ -17,6 +17,7 @@ class UserService @Autowired constructor(
     private val repository: UserProfileRepository,
     private val passwordEncoder: PasswordEncoder,
     private val tokenService: TokenService,
+    private val countryService: CountryService,
     private val mapper: UserMapper,
 ) {
     fun create(userEntity: UserEntity): UserEntity {
@@ -54,10 +55,10 @@ class UserService @Autowired constructor(
     }
 
     fun getUsers(): List<User> {
-        return repository.findAll().map { mapper.fromEntityToModel(it) }
+        return repository.findAll().map { mapper.fromEntityToModel(it, countryService.getCountry(it.country)) }
     }
 
     fun getProfile(): User {
-        return getCurrentUser().let { mapper.fromEntityToModel(it) }
+        return getCurrentUser().let { mapper.fromEntityToModel(it, countryService.getCountry(it.country)) }
     }
 }

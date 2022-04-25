@@ -27,4 +27,8 @@ class CountryService @Autowired constructor(
                 )
             }
     }
+
+    fun getCountry(code: String): Country? {
+        return getCountries().find { it.code == code }
+    }
 }
