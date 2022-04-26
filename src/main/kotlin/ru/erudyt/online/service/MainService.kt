@@ -40,9 +40,17 @@ class MainService(
             ),
             Tagline(
                 title = "Отличное портфолио!",
-                text = "Диплом участнику грамота руководителю = 100р. Именные медали",
+                text = "Диплом участнику + грамота руководителю = 100р. Именные медали",
                 icon = "https://erudit-online.ru/files/design/slogan_orange.png",
                 titleColor = "#FFA726",
+                url = "https://erudit-online.ru/medals.html",
+            ),
+            Tagline(
+                title = "Групповой контроль!",
+                text = "Полезная функция для учителей - организация онлайн-контрольной!",
+                icon = "https://erudit-online.ru/files/design/slogan_blue.png",
+                titleColor = "#03A9F4",
+                url = "https://erudit-online.ru/about-group-control.html",
             )
         )
     }
