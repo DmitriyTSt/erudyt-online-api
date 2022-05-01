@@ -14,7 +14,7 @@ interface ResultRepository : JpaRepository<ResultEntity, Long> {
 
     fun findAllByEmail(email: String, pageable: Pageable): Page<ResultEntity>
 
-    fun findAllByEmailAndCompetitionTitleLikeOrUserIdAndCompetitionTitleLike(
+    fun findAllByEmailAndCompetitionTitleIgnoreCaseContainingOrUserIdAndCompetitionTitleIgnoreCaseContaining(
         email: String,
         query1: String,
         userId: Long,
