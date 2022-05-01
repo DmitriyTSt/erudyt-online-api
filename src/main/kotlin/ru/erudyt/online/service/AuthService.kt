@@ -153,10 +153,8 @@ class AuthService @Autowired constructor(
         if (request.password.length < MIN_PASSWORD_LENGTH) {
             throw ApiError.PASSWORD_INCORRECT_MIN.getException()
         }
-        val lastUserId = userService.getLastId()
         val userProfile = userService.create(
             UserEntity(
-                id = lastUserId + 1,
                 username = request.email,
                 password = request.password,
                 firstName = request.name,

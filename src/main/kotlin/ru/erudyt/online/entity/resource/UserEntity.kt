@@ -13,7 +13,8 @@ import javax.persistence.Table
 @Table(name = "tl_member")
 class UserEntity(
     @Id
-    val id: Long, // TODO use normal autoincrement id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long = 0,
     val account: Int = 0,
     @Column(name = "firstname") val firstName: String,
     @Column(name = "lastname") val lastName: String,

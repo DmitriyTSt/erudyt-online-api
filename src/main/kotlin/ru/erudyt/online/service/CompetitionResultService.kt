@@ -77,10 +77,7 @@ class CompetitionResultService @Autowired constructor(
             authService.updateAnonymousUserLastEmail(currentToken.userId, email)
         }
 
-        // TODO try use normal id generate strategy
-        val lastId = resultRepository.getLastId()
         val result = ResultEntity(
-            id = lastId + 1,
             date = time,
             paid = "",
             code = tempResult.code,

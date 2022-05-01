@@ -9,7 +9,4 @@ interface UserProfileRepository : JpaRepository<UserEntity, Long> {
     fun findByUsername(login: String): UserEntity?
 
     fun findByActivation(activation: String): UserEntity?
-
-    @Query("select t.id from ${UserEntity.TABLE_NAME} t order by t.id desc limit 1", nativeQuery = true)
-    fun getLastId(): Long
 }

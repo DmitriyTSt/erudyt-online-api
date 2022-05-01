@@ -2,13 +2,17 @@ package ru.erudyt.online.entity.resource
 
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.Table
 
 @Entity
 @Table(name = "tl_comp_result")
 class ResultEntity(
-    @Id val id: Long, // TODO use normal autoincrement id
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long = 0,
     val date: Long,
     val paid: String,
     val code: String,
