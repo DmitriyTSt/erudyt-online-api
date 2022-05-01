@@ -4,7 +4,7 @@ import javax.persistence.Embeddable
 
 @Embeddable
 class CompetitionScoreEntityPK(
-	var email: String,
-	var name: String,
-	var period: Int,
+    var email: String,
+    var name: String,
+    var period: Int,
 ) : java.io.Serializable

@@ -8,24 +8,24 @@ import ru.erudyt.online.entity.resource.RatingEntity
 
 @Component
 class RatingMapper @Autowired constructor(
-	private val imageMapper: ImageMapper,
+    private val imageMapper: ImageMapper,
 ) {
-	fun fromEntityToModel(entity: RatingEntity, index: Int): RatingRow {
-		return RatingRow(
-			rank = index + 1,
-			username = entity.name,
-			score = entity.score,
-			countryIcon = imageMapper.fromCountryToImage(entity.country),
-		)
-	}
+    fun fromEntityToModel(entity: RatingEntity, index: Int): RatingRow {
+        return RatingRow(
+            rank = index + 1,
+            username = entity.name,
+            score = entity.score,
+            countryIcon = imageMapper.fromCountryToImage(entity.country),
+        )
+    }
 
-	fun fromEntityToModel(entity: CompetitionScoreEntity): RatingRow {
-		return RatingRow(
-			rank = entity.place,
-			username = entity.id.name,
-			score = entity.score,
-			countryIcon = imageMapper.fromCountryToImage(entity.country),
-			oldRank = entity.oldPlace,
-		)
-	}
+    fun fromEntityToModel(entity: CompetitionScoreEntity): RatingRow {
+        return RatingRow(
+            rank = entity.place,
+            username = entity.id.name,
+            score = entity.score,
+            countryIcon = imageMapper.fromCountryToImage(entity.country),
+            oldRank = entity.oldPlace,
+        )
+    }
 }

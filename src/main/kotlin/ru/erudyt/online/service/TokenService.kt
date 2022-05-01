@@ -21,8 +21,8 @@ import java.util.Date
 @Service
 @EnableConfigurationProperties(JwtSettings::class)
 class TokenService @Autowired constructor(
-	private val repository: TokenPairRepository,
-	private val jwtSettings: JwtSettings,
+    private val repository: TokenPairRepository,
+    private val jwtSettings: JwtSettings,
 ) {
     @Transactional
     fun createToken(userId: Long, deviceId: String, isAnonym: Boolean, os: Os): Token {

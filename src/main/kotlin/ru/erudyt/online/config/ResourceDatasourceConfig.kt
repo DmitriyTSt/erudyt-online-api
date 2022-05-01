@@ -19,51 +19,51 @@ import javax.sql.DataSource
 
 @Configuration
 @EnableJpaRepositories(
-	entityManagerFactoryRef = "resourceEntityManagerFactory",
-	transactionManagerRef = "resourceTransactionManager",
-	basePackages = ["ru.erudyt.online.repository.resource"]
+    entityManagerFactoryRef = "resourceEntityManagerFactory",
+    transactionManagerRef = "resourceTransactionManager",
+    basePackages = ["ru.erudyt.online.repository.resource"]
 )
 @EnableTransactionManagement
 @EnableConfigurationProperties(DialectSettings::class)
 class ResourceDatasourceConfig @Autowired constructor(
-	private val dialectSettings: DialectSettings,
+    private val dialectSettings: DialectSettings,
 ) {
 
-	companion object {
-		private const val ENTITY_PACKAGE = "ru.erudyt.online.entity.resource"
-	}
+    companion object {
+        private const val ENTITY_PACKAGE = "ru.erudyt.online.entity.resource"
+    }
 
-	@Bean("resourceDataSource")
-	@Primary
-	@ConfigurationProperties(prefix = "resource.datasource")
-	fun resourceDataSource(): DataSource {
-		return DataSourceBuilder.create().build()
-	}
+    @Bean("resourceDataSource")
+    @Primary
+    @ConfigurationProperties(prefix = "resource.datasource")
+    fun resourceDataSource(): DataSource {
+        return DataSourceBuilder.create().build()
+    }
 
-	@Primary
-	@Bean("resourceEntityManagerFactory")
-	fun resourceEntityManagerFactory(
-		@Qualifier("resourceDataSource") dataSource: DataSource,
-	): LocalContainerEntityManagerFactoryBean {
-		return LocalContainerEntityManagerFactoryBean().apply {
-			setDataSource(dataSource)
-			setPackagesToScan(ENTITY_PACKAGE)
-			persistenceUnitName = "resource"
-			jpaVendorAdapter = HibernateJpaVendorAdapter()
-			setJpaPropertyMap(
-				mapOf(
-					"hibernate.dialect" to dialectSettings.resourceDialect,
-//					"hibernate.show_sql" to "true",
-				)
-			)
-		}
-	}
+    @Primary
+    @Bean("resourceEntityManagerFactory")
+    fun resourceEntityManagerFactory(
+        @Qualifier("resourceDataSource") dataSource: DataSource,
+    ): LocalContainerEntityManagerFactoryBean {
+        return LocalContainerEntityManagerFactoryBean().apply {
+            setDataSource(dataSource)
+            setPackagesToScan(ENTITY_PACKAGE)
+            persistenceUnitName = "resource"
+            jpaVendorAdapter = HibernateJpaVendorAdapter()
+            setJpaPropertyMap(
+                mapOf(
+                    "hibernate.dialect" to dialectSettings.resourceDialect,
+//                    "hibernate.show_sql" to "true",
+                )
+            )
+        }
+    }
 
-	@Primary
-	@Bean("resourceTransactionManager")
-	fun resourceTransactionManager(
-		@Qualifier("resourceEntityManagerFactory") resourceEntityManagerFactory: EntityManagerFactory,
-	): PlatformTransactionManager {
-		return JpaTransactionManager(resourceEntityManagerFactory)
-	}
+    @Primary
+    @Bean("resourceTransactionManager")
+    fun resourceTransactionManager(
+        @Qualifier("resourceEntityManagerFactory") resourceEntityManagerFactory: EntityManagerFactory,
+    ): PlatformTransactionManager {
+        return JpaTransactionManager(resourceEntityManagerFactory)
+    }
 }

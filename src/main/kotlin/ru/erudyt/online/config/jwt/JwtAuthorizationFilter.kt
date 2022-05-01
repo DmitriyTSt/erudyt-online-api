@@ -20,8 +20,8 @@ import javax.servlet.http.HttpServletResponse
 @Component
 @EnableConfigurationProperties(JwtSettings::class)
 class JwtAuthorizationFilter @Autowired constructor(
-	private val jwtSettings: JwtSettings,
-	private val tokenPairRepository: TokenPairRepository,
+    private val jwtSettings: JwtSettings,
+    private val tokenPairRepository: TokenPairRepository,
 ) : OncePerRequestFilter() {
 
     companion object {

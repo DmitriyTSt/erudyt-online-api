@@ -18,48 +18,48 @@ import javax.sql.DataSource
 
 @Configuration
 @EnableJpaRepositories(
-	entityManagerFactoryRef = "apiEntityManagerFactory",
-	transactionManagerRef = "apiTransactionManager",
-	basePackages = ["ru.erudyt.online.repository.api"]
+    entityManagerFactoryRef = "apiEntityManagerFactory",
+    transactionManagerRef = "apiTransactionManager",
+    basePackages = ["ru.erudyt.online.repository.api"]
 )
 @EnableTransactionManagement
 @EnableConfigurationProperties(DialectSettings::class)
 class ApiDatasourceConfig @Autowired constructor(
-	private val dialectSettings: DialectSettings,
+    private val dialectSettings: DialectSettings,
 ) {
 
-	companion object {
-		private const val ENTITY_PACKAGE = "ru.erudyt.online.entity.api"
-	}
+    companion object {
+        private const val ENTITY_PACKAGE = "ru.erudyt.online.entity.api"
+    }
 
-	@Bean("apiDataSource")
-	@ConfigurationProperties(prefix = "api.datasource")
-	fun apiDataSource(): DataSource {
-		return DataSourceBuilder.create().build()
-	}
+    @Bean("apiDataSource")
+    @ConfigurationProperties(prefix = "api.datasource")
+    fun apiDataSource(): DataSource {
+        return DataSourceBuilder.create().build()
+    }
 
-	@Bean("apiEntityManagerFactory")
-	fun apiEntityManagerFactory(
-		@Qualifier("apiDataSource") dataSource: DataSource,
-	): LocalContainerEntityManagerFactoryBean {
-		return LocalContainerEntityManagerFactoryBean().apply {
-			setDataSource(dataSource)
-			setPackagesToScan(ENTITY_PACKAGE)
-			persistenceUnitName = "api"
-			jpaVendorAdapter = HibernateJpaVendorAdapter()
-			setJpaPropertyMap(
-				mapOf(
-					"hibernate.dialect" to dialectSettings.apiDialect,
-					"hibernate.hbm2ddl.auto" to "update",
-				)
-			)
-		}
-	}
+    @Bean("apiEntityManagerFactory")
+    fun apiEntityManagerFactory(
+        @Qualifier("apiDataSource") dataSource: DataSource,
+    ): LocalContainerEntityManagerFactoryBean {
+        return LocalContainerEntityManagerFactoryBean().apply {
+            setDataSource(dataSource)
+            setPackagesToScan(ENTITY_PACKAGE)
+            persistenceUnitName = "api"
+            jpaVendorAdapter = HibernateJpaVendorAdapter()
+            setJpaPropertyMap(
+                mapOf(
+                    "hibernate.dialect" to dialectSettings.apiDialect,
+                    "hibernate.hbm2ddl.auto" to "update",
+                )
+            )
+        }
+    }
 
-	@Bean("apiTransactionManager")
-	fun apiTransactionManager(
-		@Qualifier("apiEntityManagerFactory") apiEntityManagerFactory: EntityManagerFactory,
-	): PlatformTransactionManager {
-		return JpaTransactionManager(apiEntityManagerFactory)
-	}
+    @Bean("apiTransactionManager")
+    fun apiTransactionManager(
+        @Qualifier("apiEntityManagerFactory") apiEntityManagerFactory: EntityManagerFactory,
+    ): PlatformTransactionManager {
+        return JpaTransactionManager(apiEntityManagerFactory)
+    }
 }
