@@ -1,4 +1,4 @@
-package ru.erudyt.online.repository.test
+package ru.erudyt.online.repository.fs
 
 import com.google.gson.Gson
 import org.springframework.beans.factory.annotation.Autowired

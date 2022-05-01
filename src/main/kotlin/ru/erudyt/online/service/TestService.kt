@@ -15,7 +15,7 @@ import ru.erudyt.online.entity.test.QuestionEntity
 import ru.erudyt.online.entity.test.TestEntity
 import ru.erudyt.online.mapper.ResultMapper
 import ru.erudyt.online.mapper.TestMapper
-import ru.erudyt.online.repository.test.TestRepository
+import ru.erudyt.online.repository.fs.TestRepository
 import javax.servlet.http.HttpServletRequest
 import kotlin.math.round
 

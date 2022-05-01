@@ -9,12 +9,15 @@ import ru.erudyt.online.dto.model.Tagline
 class MainService(
     private val competitionItemService: CompetitionItemService,
     private val recommendationService: RecommendationService,
+    private val taglineService: TaglineService,
 ) {
     fun getMain(): List<MainSection> {
         return listOfNotNull(
-            MainSection.TaglineBlock(
-                taglines = getTaglines()
-            ),
+            taglineService.getTaglines().takeIf { it.isNotEmpty() }?.let { taglines ->
+                MainSection.TaglineBlock(
+                    taglines = taglines,
+                )
+            },
             MainSection.CompetitionItemsBlock(
                 title = "Новые конкурсы",
                 competitionViewType = CompetitionViewType.ROW,
@@ -27,31 +30,6 @@ class MainService(
                     competitionItems = recommendations,
                 )
             },
-        )
-    }
-
-    private fun getTaglines(): List<Tagline> {
-        return listOf(
-            Tagline(
-                title = "Мгновенный диплом!",
-                text = "Результат и наградные материалы доступны сразу после прохождения конкурса",
-                icon = "https://erudit-online.ru/files/design/slogan_green.png",
-                titleColor = "#8BC34A",
-            ),
-            Tagline(
-                title = "Отличное портфолио!",
-                text = "Диплом участнику + грамота руководителю = 100р. Именные медали",
-                icon = "https://erudit-online.ru/files/design/slogan_orange.png",
-                titleColor = "#FFA726",
-                url = "https://erudit-online.ru/medals.html",
-            ),
-            Tagline(
-                title = "Групповой контроль!",
-                text = "Полезная функция для учителей - организация онлайн-контрольной!",
-                icon = "https://erudit-online.ru/files/design/slogan_blue.png",
-                titleColor = "#03A9F4",
-                url = "https://erudit-online.ru/about-group-control.html",
-            )
         )
     }
 }
