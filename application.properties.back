@@ -1,3 +1,4 @@
+server.port=8080
 jwt.secret=auth_boilerplate_jwt_secret
 jwt.accessTokenExpirationTime=86400
 jwt.refreshTokenExpirationTime=365
