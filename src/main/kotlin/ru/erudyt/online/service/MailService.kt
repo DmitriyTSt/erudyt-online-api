@@ -13,7 +13,7 @@ class MailService @Autowired constructor(
     private val mailSettings: MailSettings,
     private val emailSender: JavaMailSender,
 ) {
-    private fun sendEmail(to: String, subject: String, text: String) {
+    fun sendEmail(to: String, subject: String, text: String) {
         val message = SimpleMailMessage().apply {
             setFrom(mailSettings.email)
             setTo(to)
