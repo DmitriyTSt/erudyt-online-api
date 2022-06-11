@@ -19,7 +19,6 @@ class TaxonomyEntity(
     val groupIndex: Int,
     val annotation: String?,
     val pageTitle: String,
-    val showInMenu: String,
 ) {
     companion object {
         const val TYPE_AGE = 5
