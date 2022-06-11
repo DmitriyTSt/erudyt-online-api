@@ -22,7 +22,7 @@ class CompetitionItemEntity(
     val dateSend: Long,
     val useStatus: String,
     val status: String,
-    val icon: String,
+    val icon: ByteArray,
     val useRules: String,
     val rules: String?,
     val subjectBlob: String,
