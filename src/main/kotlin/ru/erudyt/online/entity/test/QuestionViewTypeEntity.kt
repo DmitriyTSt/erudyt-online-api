@@ -1,6 +1,6 @@
 package ru.erudyt.online.entity.test
 
-enum class QuestionImageTypeEntity {
+enum class QuestionViewTypeEntity {
     /** Без картинки */
     NO_IMAGE,
 
@@ -9,4 +9,7 @@ enum class QuestionImageTypeEntity {
 
     /** Картинка слева */
     LEFT_IMAGE,
+
+    /** Тест с поддержкой TEX */
+    TEX,
 }

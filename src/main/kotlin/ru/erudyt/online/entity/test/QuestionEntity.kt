@@ -5,8 +5,8 @@ sealed class QuestionEntity(
     val id: Int,
     /** Текст вопроса */
     val text: String,
-    /** Тип вопроса по наличию картинки */
-    val imageType: QuestionImageTypeEntity,
+    /** Тип вопроса по отображению */
+    val viewType: QuestionViewTypeEntity,
     /** Тип вопроса по способу ответа */
     val answerType: QuestionAnswerTypeEntity,
     /** Относительный путь к изображению вопроса */
@@ -17,8 +17,8 @@ sealed class QuestionEntity(
         id: Int,
         /** Текст вопроса */
         text: String,
-        /** Тип вопроса по наличию картинки */
-        imageType: QuestionImageTypeEntity,
+        /** Тип вопроса по отображению */
+        viewType: QuestionViewTypeEntity,
         /** Относительный путь к изображению вопроса */
         imagePath: String?,
         /** Список ответов */
@@ -27,20 +27,20 @@ sealed class QuestionEntity(
         val correctAnswerId: String,
         /** Перемешивать ли ответы */
         val shuffle: Boolean,
-    ) : QuestionEntity(id, text, imageType, QuestionAnswerTypeEntity.ANSWER_LIST, imagePath)
+    ) : QuestionEntity(id, text, viewType, QuestionAnswerTypeEntity.ANSWER_LIST, imagePath)
 
     class SingleAnswer(
         /** Идентификатор вопроса */
         id: Int,
         /** Текст вопроса */
         text: String,
-        /** Тип вопроса по наличию картинки */
-        imageType: QuestionImageTypeEntity,
+        /** Тип вопроса по отображению */
+        viewType: QuestionViewTypeEntity,
         /** Относительный путь к изображению вопроса */
         imagePath: String?,
         /** Подпись к полю ответа */
         val answerLabel: String,
         /** Правильный ответ */
         val correctAnswer: String,
-    ) : QuestionEntity(id, text, imageType, QuestionAnswerTypeEntity.SINGLE_ANSWER, imagePath)
+    ) : QuestionEntity(id, text, viewType, QuestionAnswerTypeEntity.SINGLE_ANSWER, imagePath)
 }

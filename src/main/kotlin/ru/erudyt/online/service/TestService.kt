@@ -44,7 +44,7 @@ class TestService @Autowired constructor(
         return if (testEntity.groups.isNotEmpty()) {
             testEntity.groups.map { group ->
                 val questionsInGroup = testEntity.questions
-                    .filter { group.startIdInclusive <= it.id && it.id <= group.endIdInclusive }
+                    .filter { group.ids.contains(it.id) }
                 getQuestionSublistShuffledIfNeed(questionsInGroup, group.count, testEntity.shuffle)
             }.flatten()
         } else {
