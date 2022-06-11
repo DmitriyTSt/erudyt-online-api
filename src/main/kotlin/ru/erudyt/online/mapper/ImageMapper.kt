@@ -21,4 +21,8 @@ class ImageMapper @Autowired constructor(
 
         return fromPathToUrl("files/flags/16/${country.uppercase()}.png")
     }
+
+    fun fromProfileIdToAvatar(profileId: Long): String? {
+        return fromPathToUrl("/files/avatars/image$profileId.jpg")
+    }
 }

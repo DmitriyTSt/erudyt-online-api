@@ -1,12 +1,15 @@
 package ru.erudyt.online.mapper
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import ru.erudyt.online.dto.model.Country
 import ru.erudyt.online.dto.model.User
 import ru.erudyt.online.entity.resource.UserEntity
 
 @Component
-class UserMapper {
+class UserMapper @Autowired constructor(
+    private val imageMapper: ImageMapper,
+) {
     fun fromEntityToModel(entity: UserEntity, country: Country?): User {
         return User(
             id = entity.id,
@@ -18,7 +21,7 @@ class UserMapper {
             city = entity.city,
             region = entity.state.takeIf { it.isNotEmpty() },
             country = country,
-            avatar = null,
+            avatar = imageMapper.fromProfileIdToAvatar(entity.id),
         )
     }
 }
