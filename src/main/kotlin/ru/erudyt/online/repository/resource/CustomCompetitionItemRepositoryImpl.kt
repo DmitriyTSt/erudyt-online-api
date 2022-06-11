@@ -74,6 +74,8 @@ class CustomCompetitionItemRepositoryImpl @Autowired constructor(
         val publishedPath = item.get<String>("published")
         predicates.add(cb.equal(publishedPath, "1"))
 
+        query.orderBy(cb.desc(item.get<String>("id")))
+
         query.select(item).apply {
             if (predicates.isNotEmpty()) {
                 where(*predicates.toTypedArray())
@@ -115,6 +117,8 @@ class CustomCompetitionItemRepositoryImpl @Autowired constructor(
         codes.forEach { code ->
             predicates.add(cb.like(charIdsPath, "%$code%"))
         }
+
+        query.orderBy(cb.desc(item.get<String>("id")))
 
         query.select(item).apply {
             if (predicates.isNotEmpty()) {
