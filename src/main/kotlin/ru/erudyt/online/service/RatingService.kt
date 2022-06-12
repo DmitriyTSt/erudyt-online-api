@@ -49,16 +49,16 @@ class RatingService @Autowired constructor(
         if (month < 1 || month > 12) throw ApiError.INCORRECT_PERIOD.getException()
         if (year > now.year) throw ApiError.NOT_FOUND.getException()
         if (year == now.year && month > now.monthValue) throw ApiError.NOT_FOUND.getException()
-        return scoreRepository.findAllByIdPeriod(year * 100 + month)
-            .map { ratingMapper.fromEntityToModel(it) }
+        return scoreRepository.findAllByIdPeriodOrderByPlace(year * 100 + month)
             .take(RATING_MONTH_LIMIT)
+            .map { ratingMapper.fromEntityToModel(it) }
     }
 
     private fun getYearRating(year: Int): List<RatingRow> {
         if (year >= LocalDateTime.now().year) throw ApiError.NOT_FOUND.getException()
-        return scoreRepository.findAllByIdPeriod(year)
-            .map { ratingMapper.fromEntityToModel(it) }
+        return scoreRepository.findAllByIdPeriodOrderByPlace(year)
             .take(RATING_YEAR_LIMIT)
+            .map { ratingMapper.fromEntityToModel(it) }
     }
 
     private fun LocalDateTime.toMillis(): Long {
