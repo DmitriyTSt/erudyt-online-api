@@ -22,7 +22,7 @@ class CountryService @Autowired constructor(
                 val locale = Locale("", code.uppercase())
                 Country(
                     code = code,
-                    name = locale.displayName,
+                    name = locale.getDisplayName(Locale("ru")),
                     image = "${domainSettings.baseUrl}${COUNTRY_IMAGE_TEMPLATE.format(code.uppercase())}"
                 )
             }
