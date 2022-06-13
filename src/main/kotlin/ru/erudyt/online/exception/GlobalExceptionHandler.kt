@@ -14,9 +14,7 @@ import ru.erudyt.online.controller.base.ErrorResponse
 import ru.erudyt.online.dto.model.ErrorDTO
 
 @RestControllerAdvice
-class GlobalExceptionHandler @Autowired constructor(
-    private val handlerExceptionResolver: HandlerExceptionResolver
-) : ResponseEntityExceptionHandler() {
+class GlobalExceptionHandler @Autowired constructor() : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(Exception::class)
     fun handleCommonException(e: Exception): ResponseEntity<ErrorResponse> {
