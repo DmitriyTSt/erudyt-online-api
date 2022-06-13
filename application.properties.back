@@ -30,6 +30,11 @@ springdoc.packagesToScan=ru.erudyt.online
 erudyt.admin.email=info@erudyt-online.ru
 erudyt.admin.name=info
 
+management.health.mail.enabled=true
+management.endpoints.web.exposure.include=health,info,metrics
+management.endpoint.info.enabled=true
+management.endpoint.health.show-details=always
+
 spring.mail.host=
 spring.mail.port=
 spring.mail.username=
