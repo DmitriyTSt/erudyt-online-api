@@ -65,7 +65,7 @@ class ResultMapper @Autowired constructor(
             UserResultDetail.Answer(
                 question = UserResultDetail.Question(
                     title = "Вопрос № ${index + 1}",
-                    text = questions[questionIndexes[index]].text,
+                    text = questionIndexes.getOrNull(index)?.let { questions[it].text }.orEmpty(),
                 ),
                 answerText = answerText,
             )
