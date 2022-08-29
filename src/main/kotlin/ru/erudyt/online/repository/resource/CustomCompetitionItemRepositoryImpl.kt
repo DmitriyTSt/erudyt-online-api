@@ -50,7 +50,7 @@ class CustomCompetitionItemRepositoryImpl @Autowired constructor(
             predicatesAnd.add(cb.or(*predicatesAges.toTypedArray()))
         }
         subjectIds.forEach { subjectId ->
-            predicatesSubjects.add(cb.or(cb.like(subjectPath, "%$subjectId%")))
+            predicatesSubjects.add(cb.or(cb.like(subjectPath, "%\"$subjectId\"%")))
         }
         if (predicatesSubjects.isNotEmpty()) {
             predicatesAnd.add(cb.or(*predicatesSubjects.toTypedArray()))
