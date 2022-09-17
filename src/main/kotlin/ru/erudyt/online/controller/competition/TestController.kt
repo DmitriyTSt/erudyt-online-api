@@ -22,7 +22,7 @@ import ru.erudyt.online.service.TestService
 import javax.servlet.http.HttpServletRequest
 
 @RestController
-@RequestMapping("/api/competition/", produces = [MediaType.APPLICATION_JSON_VALUE])
+@RequestMapping("/api/v1/competition/", produces = [MediaType.APPLICATION_JSON_VALUE])
 @EnableConfigurationProperties(EnvSettings::class)
 class TestController @Autowired constructor(
     private val testService: TestService,

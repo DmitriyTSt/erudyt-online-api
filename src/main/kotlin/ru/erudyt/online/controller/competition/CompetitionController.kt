@@ -17,7 +17,7 @@ import ru.erudyt.online.dto.response.CompetitionItemResponse
 import ru.erudyt.online.service.CompetitionItemService
 
 @RestController
-@RequestMapping("/api/competition/", produces = [MediaType.APPLICATION_JSON_VALUE])
+@RequestMapping("/api/v1/competition/", produces = [MediaType.APPLICATION_JSON_VALUE])
 class CompetitionController @Autowired constructor(
     private val service: CompetitionItemService,
 ) {

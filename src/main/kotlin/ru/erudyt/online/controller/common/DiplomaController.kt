@@ -12,7 +12,7 @@ import ru.erudyt.online.dto.model.Diploma
 import ru.erudyt.online.service.DiplomaService
 
 @RestController
-@RequestMapping("/api/", produces = [MediaType.APPLICATION_JSON_VALUE])
+@RequestMapping("/api/v1/", produces = [MediaType.APPLICATION_JSON_VALUE])
 class DiplomaController @Autowired constructor(
     private val service: DiplomaService,
 ) {

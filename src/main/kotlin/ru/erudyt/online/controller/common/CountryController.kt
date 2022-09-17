@@ -12,7 +12,7 @@ import ru.erudyt.online.dto.model.Country
 import ru.erudyt.online.service.CountryService
 
 @RestController
-@RequestMapping("/api/", produces = [MediaType.APPLICATION_JSON_VALUE])
+@RequestMapping("/api/v1/", produces = [MediaType.APPLICATION_JSON_VALUE])
 class CountryController @Autowired constructor(
     private val countryService: CountryService,
 ) {

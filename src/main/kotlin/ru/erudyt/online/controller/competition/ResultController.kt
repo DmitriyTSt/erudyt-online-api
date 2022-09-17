@@ -23,7 +23,7 @@ import ru.erudyt.online.service.CompetitionResultService
 import ru.erudyt.online.service.RatingService
 
 @RestController
-@RequestMapping("/api/", produces = [MediaType.APPLICATION_JSON_VALUE])
+@RequestMapping("/api/v1/", produces = [MediaType.APPLICATION_JSON_VALUE])
 class ResultController @Autowired constructor(
     private val resultService: CompetitionResultService,
     private val ratingService: RatingService,
@@ -39,16 +39,31 @@ class ResultController @Autowired constructor(
 
     @GetMapping("user/results")
     fun getUserResults(
-        @RequestParam(required = false) email: String?,
         @RequestParam(required = false) query: String?,
         @RequestParam(required = false) offset: Int?,
         @RequestParam(required = false) limit: Int?,
     ): ResponseEntity<BaseResponse<ListResponse<UserResultRow>>> {
         return ResponseEntity.ok(
             BaseResponse(
-                resultService.getAnonOrUserResults(
-                    email = email,
+                resultService.getUserResults(
                     query = query,
+                    offset = offset ?: 0,
+                    limit = limit ?: 10,
+                )
+            )
+        )
+    }
+
+    @GetMapping("user/resultsByEmail")
+    fun getResultsByEmail(
+        @RequestParam(required = false) email: String?,
+        @RequestParam(required = false) offset: Int?,
+        @RequestParam(required = false) limit: Int?,
+    ): ResponseEntity<BaseResponse<ListResponse<UserResultRow>>> {
+        return ResponseEntity.ok(
+            BaseResponse(
+                resultService.getResultsByEmail(
+                    email = email,
                     offset = offset ?: 0,
                     limit = limit ?: 10,
                 )

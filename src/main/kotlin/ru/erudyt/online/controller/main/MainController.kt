@@ -12,7 +12,7 @@ import ru.erudyt.online.dto.model.MainSection
 import ru.erudyt.online.service.MainService
 
 @RestController
-@RequestMapping("/api/", produces = [MediaType.APPLICATION_JSON_VALUE])
+@RequestMapping("/api/v1/", produces = [MediaType.APPLICATION_JSON_VALUE])
 class MainController @Autowired constructor(
     private val mainService: MainService,
 ) {

@@ -14,7 +14,7 @@ import ru.erudyt.online.dto.response.WebPageResponse
 import ru.erudyt.online.service.WebPageService
 
 @RestController
-@RequestMapping("/api/", produces = [MediaType.APPLICATION_JSON_VALUE])
+@RequestMapping("/api/v1/", produces = [MediaType.APPLICATION_JSON_VALUE])
 class WebPageController @Autowired constructor(
     private val webPageService: WebPageService,
 ) {

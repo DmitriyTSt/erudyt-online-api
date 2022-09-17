@@ -13,7 +13,7 @@ import ru.erudyt.online.dto.request.TestMailRequest
 import ru.erudyt.online.service.MailService
 
 @RestController
-@RequestMapping("/api/", produces = [MediaType.APPLICATION_JSON_VALUE])
+@RequestMapping("/api/v1/", produces = [MediaType.APPLICATION_JSON_VALUE])
 class MailController @Autowired constructor(
     private val mailService: MailService,
     private val envSettings: EnvSettings,

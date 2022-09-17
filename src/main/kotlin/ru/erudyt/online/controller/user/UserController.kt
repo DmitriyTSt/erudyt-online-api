@@ -13,7 +13,7 @@ import ru.erudyt.online.dto.response.ProfileResponse
 import ru.erudyt.online.service.UserService
 
 @RestController
-@RequestMapping("/api/", produces = [MediaType.APPLICATION_JSON_VALUE])
+@RequestMapping("/api/v1/", produces = [MediaType.APPLICATION_JSON_VALUE])
 class UserController @Autowired constructor(
     private val userService: UserService,
 ) {

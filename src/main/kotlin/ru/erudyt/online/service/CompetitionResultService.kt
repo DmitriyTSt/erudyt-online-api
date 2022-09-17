@@ -44,14 +44,9 @@ class CompetitionResultService @Autowired constructor(
         return ListResponse(page.toList(), page.totalElements > offset + limit)
     }
 
-    fun getAnonOrUserResults(email: String?, query: String?, offset: Int, limit: Int): ListResponse<UserResultRow> {
-        val currentToken = tokenService.getCurrentTokenPair()
-        return if (currentToken.isAnonym) {
-            val emailQuery = email?.takeIf { it.isNotEmpty() } ?: throw ApiError.SEARCH_EMPTY_EMAIL.getException()
-            return searchResults(emailQuery, offset, limit)
-        } else {
-            getUserResults(currentToken, query.orEmpty(), offset, limit)
-        }
+    fun getResultsByEmail(email: String?, offset: Int, limit: Int): ListResponse<UserResultRow> {
+        val emailQuery = email?.takeIf { it.isNotEmpty() } ?: throw ApiError.SEARCH_EMPTY_EMAIL.getException()
+        return searchResults(emailQuery, offset, limit)
     }
 
     fun getResult(id: Long): ResultResponse {
@@ -149,13 +144,15 @@ class CompetitionResultService @Autowired constructor(
     /**
      * Получение результатов текущего пользователя
      */
-    private fun getUserResults(
-        currentToken: TokenPairEntity,
-        query: String,
+    fun getUserResults(
+        query: String?,
         offset: Int,
         limit: Int
     ): ListResponse<UserResultRow> {
-        val page = getUserResultEntities(currentToken, query, offset, limit)
+        val currentToken = tokenService.getCurrentTokenPair()
+        if (currentToken.isAnonym) throw ApiError.TOKEN_BELONGS_ANONYM.getException()
+
+        val page = getUserResultEntities(currentToken, query.orEmpty(), offset, limit)
         val list = page.toList().map { resultMapper.fromEntityToUserModel(it) }
         return ListResponse(list, page.totalElements > offset + limit)
     }

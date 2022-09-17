@@ -22,7 +22,7 @@ import ru.erudyt.online.dto.response.RefreshResponse
 import ru.erudyt.online.service.AuthService
 
 @RestController
-@RequestMapping("/api/auth", produces = [MediaType.APPLICATION_JSON_VALUE])
+@RequestMapping("/api/v1/auth", produces = [MediaType.APPLICATION_JSON_VALUE])
 class AuthController @Autowired constructor(
     private val authService: AuthService,
 ) {
