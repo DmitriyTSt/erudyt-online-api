@@ -20,8 +20,8 @@ class SecurityConfig @Autowired constructor(
     override fun configure(http: HttpSecurity) {
         http.csrf().disable()
             .authorizeRequests()
-            .antMatchers("/api/auth/anonym").permitAll()
-            .antMatchers("/api/auth/refresh").permitAll()
+            .antMatchers("/api/v1/auth/anonym").permitAll()
+            .antMatchers("/api/v1/auth/refresh").permitAll()
             .antMatchers("/api/**").authenticated()
             .anyRequest().permitAll()
             .and()
