@@ -51,8 +51,8 @@ class WebPageService @Autowired constructor(
             path
         }
         val doc = Jsoup.connect("${domainSettings.baseUrl}${fixedPath}").get()
-        doc.body().select("header").first().remove()
-        doc.body().select("footer").first().remove()
+        doc.body().select("header").first()?.remove()
+        doc.body().select("footer").first()?.remove()
         val title1 = doc.select("h1").takeIf { it.isNotEmpty() }?.first()?.html()
         val title2 = if (title1 == null) {
             doc.select("h2").takeIf { it.isNotEmpty() }?.first()?.html()
@@ -60,10 +60,10 @@ class WebPageService @Autowired constructor(
             null
         }
         if (title1 != null) {
-            doc.select("h1").first().remove()
+            doc.select("h1").first()?.remove()
         }
         if (title2 != null) {
-            doc.select("h2").first().remove()
+            doc.select("h2").first()?.remove()
         }
         return WebPage((title1 ?: title2).orEmpty(), doc.html())
     }
