@@ -27,13 +27,17 @@ class AppConfigService @Autowired constructor(
     private fun buildAppUpdate(appVersion: AppVersion, appUpdateEntity: AppUpdateEntity?): AppUpdate? {
         if (appUpdateEntity == null) return null
 
-        val forceUpdateFromInt = appUpdateEntity.minForceUpdateVersion?.let { appVersionMapper.fromShortString(it) }?.versionInt
-        if (forceUpdateFromInt != null && appVersion.versionInt < forceUpdateFromInt) {
+        val minForceUpdateVersionInt = appUpdateEntity.minForceUpdateVersion
+            ?.let { appVersionMapper.fromShortString(it) }
+            ?.versionInt
+        if (minForceUpdateVersionInt != null && appVersion.versionInt < minForceUpdateVersionInt) {
             return AppUpdate(forceUpdate = true)
         }
 
-        val softUpdateFromInt = appUpdateEntity.minSoftUpdateVersion?.let { appVersionMapper.fromShortString(it) }?.versionInt
-        if (softUpdateFromInt != null && appVersion.versionInt < softUpdateFromInt) {
+        val minSoftUpdateVersionInt = appUpdateEntity.minSoftUpdateVersion
+            ?.let { appVersionMapper.fromShortString(it) }
+            ?.versionInt
+        if (minSoftUpdateVersionInt != null && appVersion.versionInt < minSoftUpdateVersionInt) {
             return AppUpdate(forceUpdate = false)
         }
 
