@@ -37,3 +37,6 @@ out/
 .vscode/
 
 application.properties
+
+.env
+init_test_resource_db.sql
