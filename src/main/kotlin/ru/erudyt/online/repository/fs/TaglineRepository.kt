@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 import ru.erudyt.online.config.TaglineSettings
 import ru.erudyt.online.dto.enums.ApiError
 import ru.erudyt.online.dto.enums.getException
-import ru.erudyt.online.entity.test.TaglineEntity
+import ru.erudyt.online.entity.fs.TaglineEntity
 import java.io.File
 import java.io.IOException
 

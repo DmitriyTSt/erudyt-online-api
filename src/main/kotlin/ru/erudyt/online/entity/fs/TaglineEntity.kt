@@ -1,4 +1,4 @@
-package ru.erudyt.online.entity.test
+package ru.erudyt.online.entity.fs
 
 class TaglineEntity(
     val title: String?,

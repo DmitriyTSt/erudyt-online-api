@@ -27,6 +27,7 @@ enum class ApiError(
     PASSWORD_INCORRECT_MIN("Минимальная длина пароля 8 символов"),
     ERROR_SEND_CONFIRM_MESSAGE("Ошибка отправки письма для подтверждения email адреса. Пожалуйста, напишите в поддержку."),
     NOT_AVAILABLE_BY_ENV("Недоступно в текущей среде"),
+    INCORRECT_APP_VERSION("Некорректная версия приложения"),
 }
 
 fun ApiError.getException() = InternalApiException(httpStatus, name, message)

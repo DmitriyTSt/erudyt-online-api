@@ -9,6 +9,8 @@ erudyt.baseUrl=https://erudit-online.ru/
 erudyt.tests.directoryPath=E:\\projects\\ERUDYT_ALL\\content\\tests_data
 erudyt.taglines.directoryPath=E:\\projects\\ERUDYT_ALL\\content\\taglines
 erudyt.taglines.fileName=taglines.json
+erudyt.config.directoryPath=E:\\projects\\ERUDYT_ALL\\content\\appConfig
+erudyt.config.appUpdate=appUpdate.json
 erudyt.countries=ru,ua,by,kz,tm,uz,tj,kg,ge,am,az,lv,lt,ee,md
 
 api.datasource.jdbcUrl=jdbc:mysql://localhost:3306/erudyt_api
