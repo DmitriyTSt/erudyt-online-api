@@ -2,7 +2,7 @@ package ru.erudyt.online.mapper
 
 import org.springframework.stereotype.Component
 import ru.erudyt.online.dto.model.Tagline
-import ru.erudyt.online.entity.test.TaglineEntity
+import ru.erudyt.online.entity.fs.TaglineEntity
 
 @Component
 class TaglineMapper {
