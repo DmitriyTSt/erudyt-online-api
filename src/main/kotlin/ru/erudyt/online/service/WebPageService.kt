@@ -2,14 +2,16 @@ package ru.erudyt.online.service
 
 import org.jsoup.Jsoup
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Service
-import ru.erudyt.online.config.DomainSettings
+import ru.erudyt.online.config.BackendAppSettings
 import ru.erudyt.online.dto.model.WebPage
 import ru.erudyt.online.dto.model.WebPageItem
 
 @Service
+@EnableConfigurationProperties(BackendAppSettings::class)
 class WebPageService @Autowired constructor(
-    private val domainSettings: DomainSettings,
+    private val appSettings: BackendAppSettings,
 ) {
     fun getInformationPages(): List<WebPageItem> {
         return listOf(
@@ -50,7 +52,7 @@ class WebPageService @Autowired constructor(
         } else {
             path
         }
-        val doc = Jsoup.connect("${domainSettings.baseUrl}${fixedPath}").get()
+        val doc = Jsoup.connect("${appSettings.baseUrl}${fixedPath}").get()
         doc.body().select("header").first()?.remove()
         doc.body().select("footer").first()?.remove()
         val title1 = doc.select("h1").takeIf { it.isNotEmpty() }?.first()?.html()

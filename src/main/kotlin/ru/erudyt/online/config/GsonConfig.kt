@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration
 import ru.erudyt.online.entity.test.QuestionEntity
 import ru.erudyt.online.mapper.QuestionEntityTypeAdapter
 
-
 @Configuration
 class GsonConfig {
     @Bean

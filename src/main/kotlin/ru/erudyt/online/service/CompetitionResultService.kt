@@ -8,7 +8,6 @@ import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import ru.erudyt.online.config.DomainSettings
 import ru.erudyt.online.controller.base.ListResponse
 import ru.erudyt.online.dto.enums.ApiError
 import ru.erudyt.online.dto.enums.getException
@@ -23,9 +22,10 @@ import ru.erudyt.online.entity.resource.ResultEntity
 import ru.erudyt.online.mapper.ResultMapper
 import ru.erudyt.online.repository.resource.ResultRepository
 import java.util.Date
+import ru.erudyt.online.config.BackendAppSettings
 
 @Service
-@EnableConfigurationProperties(DomainSettings::class)
+@EnableConfigurationProperties(BackendAppSettings::class)
 class CompetitionResultService @Autowired constructor(
     private val authService: AuthService,
     private val userService: UserService,
@@ -35,7 +35,7 @@ class CompetitionResultService @Autowired constructor(
     private val testService: TestService,
     private val competitionItemService: CompetitionItemService,
     private val tempResultService: TempResultService,
-    private val domainSettings: DomainSettings,
+    private val appSettings: BackendAppSettings,
 ) {
     fun getCommonResult(offset: Int, limit: Int): ListResponse<CommonResultRow> {
         val codesMap = competitionItemService.getCodesMap()
@@ -120,7 +120,7 @@ class CompetitionResultService @Autowired constructor(
         return CreatedResult(
             id = resultEntity.id,
             username = resultEntity.name,
-            resultLink = "${domainSettings.baseUrl}/diplom.html?id=${resultEntity.id}",
+            resultLink = "${appSettings.baseUrl}/diplom.html?id=${resultEntity.id}",
             achievementText = "", // TODO add achievements
         )
     }

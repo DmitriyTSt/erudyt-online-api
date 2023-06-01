@@ -3,17 +3,17 @@ package ru.erudyt.online.mapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Component
-import ru.erudyt.online.config.DomainSettings
+import ru.erudyt.online.config.BackendAppSettings
 
 @Component
-@EnableConfigurationProperties(DomainSettings::class)
+@EnableConfigurationProperties(BackendAppSettings::class)
 class ImageMapper @Autowired constructor(
-    private val domainSettings: DomainSettings,
+    private val appSettings: BackendAppSettings,
 ) {
 
     fun fromPathToUrl(path: String?): String? {
         if (path == null) return null
-        return "${domainSettings.baseUrl}$path"
+        return "${appSettings.baseUrl}$path"
     }
 
     fun fromCountryToImage(country: String?): String? {
