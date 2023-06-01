@@ -1,4 +1,4 @@
-package ru.erudyt.online.config
+package ru.erudyt.online.config.property
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 

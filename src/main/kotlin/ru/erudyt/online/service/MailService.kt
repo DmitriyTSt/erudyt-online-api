@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.stereotype.Service
-import ru.erudyt.online.config.MailSettings
+import ru.erudyt.online.config.property.MailSettings
 
 @Service
 @EnableConfigurationProperties(MailSettings::class)

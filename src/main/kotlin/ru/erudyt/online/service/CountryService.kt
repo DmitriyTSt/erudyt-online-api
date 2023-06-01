@@ -4,7 +4,7 @@ import java.util.Locale
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Service
-import ru.erudyt.online.config.BackendAppSettings
+import ru.erudyt.online.config.property.BackendAppSettings
 import ru.erudyt.online.dto.model.Country
 
 private const val COUNTRY_IMAGE_TEMPLATE = "files/flags/24/%s.png"

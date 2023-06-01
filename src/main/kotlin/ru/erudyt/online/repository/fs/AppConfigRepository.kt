@@ -6,7 +6,7 @@ import java.io.IOException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Repository
-import ru.erudyt.online.config.AppConfigSettings
+import ru.erudyt.online.config.property.AppConfigSettings
 import ru.erudyt.online.entity.fs.AppUpdateEntity
 
 @Repository

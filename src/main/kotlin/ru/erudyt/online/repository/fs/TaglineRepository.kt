@@ -5,7 +5,7 @@ import com.google.gson.reflect.TypeToken
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Repository
-import ru.erudyt.online.config.TaglineSettings
+import ru.erudyt.online.config.property.TaglineSettings
 import ru.erudyt.online.dto.enums.ApiError
 import ru.erudyt.online.dto.enums.getException
 import ru.erudyt.online.entity.fs.TaglineEntity

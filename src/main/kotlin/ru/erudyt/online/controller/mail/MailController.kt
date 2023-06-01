@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import ru.erudyt.online.config.BackendAppSettings
+import ru.erudyt.online.config.property.BackendAppSettings
 import ru.erudyt.online.dto.enums.ApiError
 import ru.erudyt.online.dto.enums.getException
 import ru.erudyt.online.dto.request.TestMailRequest

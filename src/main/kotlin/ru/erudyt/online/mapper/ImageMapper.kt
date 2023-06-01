@@ -3,7 +3,7 @@ package ru.erudyt.online.mapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Component
-import ru.erudyt.online.config.BackendAppSettings
+import ru.erudyt.online.config.property.BackendAppSettings
 
 @Component
 @EnableConfigurationProperties(BackendAppSettings::class)

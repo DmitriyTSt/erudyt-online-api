@@ -4,7 +4,7 @@ import org.jsoup.Jsoup
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Service
-import ru.erudyt.online.config.BackendAppSettings
+import ru.erudyt.online.config.property.BackendAppSettings
 import ru.erudyt.online.dto.model.WebPage
 import ru.erudyt.online.dto.model.WebPageItem
 

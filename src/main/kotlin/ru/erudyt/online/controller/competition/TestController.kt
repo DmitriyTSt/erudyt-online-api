@@ -19,7 +19,7 @@ import ru.erudyt.online.dto.response.CompetitionTestResponse
 import ru.erudyt.online.entity.test.TestEntity
 import ru.erudyt.online.service.TestService
 import javax.servlet.http.HttpServletRequest
-import ru.erudyt.online.config.BackendAppSettings
+import ru.erudyt.online.config.property.BackendAppSettings
 
 @RestController
 @RequestMapping("/api/v1/competition/", produces = [MediaType.APPLICATION_JSON_VALUE])

@@ -22,7 +22,7 @@ import ru.erudyt.online.entity.resource.ResultEntity
 import ru.erudyt.online.mapper.ResultMapper
 import ru.erudyt.online.repository.resource.ResultRepository
 import java.util.Date
-import ru.erudyt.online.config.BackendAppSettings
+import ru.erudyt.online.config.property.BackendAppSettings
 
 @Service
 @EnableConfigurationProperties(BackendAppSettings::class)
