@@ -57,6 +57,7 @@ class CompetitionItemMapper @Autowired constructor(
             pContents.subList(0, pContents.lastIndex.takeIf { it >= 0 } ?: 0)
                 .joinToString("\n")
                 .replace("<[^>]*>".toRegex(), "")
+                .replace("&nbsp;", " ")
         }
         val infos = LI_CONTENT_REGEX.findAll(rawDescription).toList()
             .mapNotNull { it.groupValues.toList().getOrNull(2) }
