@@ -8,7 +8,7 @@ import ru.erudyt.online.dto.model.CompetitionItemShort
 import ru.erudyt.online.dto.model.TestAgeGroup
 import ru.erudyt.online.entity.resource.CompetitionItemEntity
 
-private val P_CONTENT_REGEX = "<p((?!>).)+>(((?!<).)+)</p>".toRegex()
+private val P_CONTENT_REGEX = "<p((?!>).)+>(((?!</p>).)+)</p>".toRegex()
 private val LI_CONTENT_REGEX = "<li((?!>).)+>(((?!<\\\\).)+)</li>".toRegex()
 
 @Component
@@ -47,14 +47,16 @@ class CompetitionItemMapper @Autowired constructor(
         )
     }
 
-    private fun separateDescriptionAndInfos(rawDescription: String?): Pair<String?, List<String>> {
+    fun separateDescriptionAndInfos(rawDescription: String?): Pair<String?, List<String>> {
         if (rawDescription == null) return null to emptyList()
         val pContents = P_CONTENT_REGEX.findAll(rawDescription).toList()
             .mapNotNull { it.groupValues.toList().getOrNull(2) }
         val description = if (pContents.isEmpty()) {
             ""
         } else {
-            pContents.subList(0, pContents.lastIndex.takeIf { it >= 0 } ?: 0).joinToString("\n")
+            pContents.subList(0, pContents.lastIndex.takeIf { it >= 0 } ?: 0)
+                .joinToString("\n")
+                .replace("<[^>]*>".toRegex(), "")
         }
         val infos = LI_CONTENT_REGEX.findAll(rawDescription).toList()
             .mapNotNull { it.groupValues.toList().getOrNull(2) }
