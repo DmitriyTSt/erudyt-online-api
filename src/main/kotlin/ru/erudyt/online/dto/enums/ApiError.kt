@@ -19,6 +19,7 @@ enum class ApiError(
     SEARCH_EMPTY_EMAIL("Необходимо указать email для поиска"),
     NOT_ALL_ANSWERS("Чтобы принять участие в конкурсе, необходимо дать ответы на все вопросы"),
     TEST_NOT_SUPPORTED("В данный момент этот вид тестов не поддерживается"),
+    TEST_ENDED("Тестирование завершено"),
     INCORRECT_PERIOD("Некорректное значение периода"),
     PROFILE_NOT_EXISTS("Профиль не существует"),
     COUNTRY_NOT_FOUND("Страна не найдена"),

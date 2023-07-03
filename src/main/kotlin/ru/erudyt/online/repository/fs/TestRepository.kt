@@ -30,8 +30,9 @@ class TestRepository @Autowired constructor(
         }
         val content = file.readText()
         val testNotSupported = gson.fromJson(content, TestNotSupportedEntity::class.java)
-        if (testNotSupported.errorCode != null) {
-            throw ApiError.TEST_NOT_SUPPORTED.getException()
+        when (testNotSupported.errorCode) {
+            "TEST_NOT_SUPPORTED" -> throw ApiError.TEST_NOT_SUPPORTED.getException()
+            "TEST_ENDED" -> throw ApiError.TEST_ENDED.getException()
         }
         return gson.fromJson(file.readText(), TestEntity::class.java)
     }
