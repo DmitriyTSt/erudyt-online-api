@@ -15,6 +15,7 @@ import ru.erudyt.online.dto.model.TestAgeGroup
 import ru.erudyt.online.dto.response.CompetitionFilterResponse
 import ru.erudyt.online.entity.resource.CompetitionItemEntity
 import ru.erudyt.online.mapper.CompetitionItemMapper
+import ru.erudyt.online.repository.fs.TestRepository
 import ru.erudyt.online.repository.resource.CompetitionItemRepository
 import ru.erudyt.online.repository.resource.CustomCompetitionItemRepository
 
@@ -27,6 +28,7 @@ class CompetitionItemService @Autowired constructor(
     private val customItemRepository: CustomCompetitionItemRepository,
     private val itemRepository: CompetitionItemRepository,
     private val mapper: CompetitionItemMapper,
+    private val testRepository: TestRepository,
     ageGroupService: AgeGroupService,
 ) {
     private val allAgeGroups = mutableListOf<AgeGroup>()
@@ -42,14 +44,14 @@ class CompetitionItemService @Autowired constructor(
         ageIds: List<Long>,
         subjectIds: List<Long>,
         offset: Int,
-        limit: Int
+        limit: Int,
     ): CompetitionFilterResponse {
         val page = customItemRepository.findAllByQueryAndAgesAndSubjects(
             query,
             ageIds,
             subjectIds,
             null,
-            emptyList(),
+            testRepository.getUnsupportedIds(),
             OffsetBasedPageRequest(offset, limit, Sort.by(Sort.Direction.DESC, "id")),
         )
         val filters = if (offset == 0) {

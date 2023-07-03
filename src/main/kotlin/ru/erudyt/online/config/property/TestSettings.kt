@@ -4,5 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "erudyt.tests")
 class TestSettings(
-    var directoryPath: String = ""
+    var directoryPath: String = "",
+    var unsupportedDirPath: String = "",
+    var unsupportedFileName: String = "",
 )

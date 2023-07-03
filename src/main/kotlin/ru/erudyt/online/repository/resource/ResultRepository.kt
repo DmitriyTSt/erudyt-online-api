@@ -10,7 +10,12 @@ import ru.erudyt.online.entity.resource.ResultEntity
 
 interface ResultRepository : JpaRepository<ResultEntity, Long> {
 
-    fun findAllByNameNotOrderByIdDesc(nameNot: String = "", pageable: Pageable): Page<ResultEntity>
+    fun findAllByNameNotAndCodeNotLikeAndCodeNotLikeOrderByIdDesc(
+        nameNot: String = "",
+        codeNotLikeZ: String = "Z%",
+        codeNotLikeY: String = "Y%",
+        pageable: Pageable,
+    ): Page<ResultEntity>
 
     fun findAllByEmail(email: String, pageable: Pageable): Page<ResultEntity>
 
@@ -45,7 +50,7 @@ interface ResultRepository : JpaRepository<ResultEntity, Long> {
                                         min(IF(LENGTH(country) > 2, NULL, country)) as country
                                     FROM tl_comp_result
                                     WHERE ?1 <= `date` AND `date` < ?2 AND email rlike '[a-zA-Z0-9\\-_.]+@[a-zA-Z0-9\\-_.]+\\.[a-zA-Z0-9]+'
-                                      AND code < 'C'
+                                      AND code <= 'X'
                                     GROUP BY email, code, name
                                 ) as t
                            GROUP BY email, name

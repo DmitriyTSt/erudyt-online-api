@@ -7,10 +7,14 @@ erudyt.env=dev
 
 erudyt.baseUrl=https://erudit-online.ru/
 erudyt.tests.directoryPath=E:\\projects\\ERUDYT_ALL\\content\\tests_data
+erudyt.tests.unsupportedDirPath=E:\\projects\\ERUDYT_ALL\\content
+erudyt.tests.unsupportedFileName=unsupportedTestIds.json
 erudyt.taglines.directoryPath=E:\\projects\\ERUDYT_ALL\\content\\taglines
 erudyt.taglines.fileName=taglines.json
 erudyt.config.directoryPath=E:\\projects\\ERUDYT_ALL\\content\\appConfig
 erudyt.config.appUpdate=appUpdate.json
+erudyt.config.diplomaPathTemplate=files/templates/type%d/page_s0.jpg
+erudyt.config.diplomaCount=28
 erudyt.countries=ru,ua,by,kz,tm,uz,tj,kg,ge,am,az,lv,lt,ee,md
 
 api.datasource.jdbcUrl=jdbc:mysql://localhost:3306/erudyt_api
