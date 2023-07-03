@@ -1,5 +1,6 @@
 package ru.erudyt.online.service
 
+import java.util.Date
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.data.domain.Page
@@ -8,6 +9,7 @@ import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import ru.erudyt.online.config.property.BackendAppSettings
 import ru.erudyt.online.controller.base.ListResponse
 import ru.erudyt.online.dto.enums.ApiError
 import ru.erudyt.online.dto.enums.getException
@@ -21,8 +23,6 @@ import ru.erudyt.online.entity.api.TokenPairEntity
 import ru.erudyt.online.entity.resource.ResultEntity
 import ru.erudyt.online.mapper.ResultMapper
 import ru.erudyt.online.repository.resource.ResultRepository
-import java.util.Date
-import ru.erudyt.online.config.property.BackendAppSettings
 
 @Service
 @EnableConfigurationProperties(BackendAppSettings::class)
@@ -39,7 +39,8 @@ class CompetitionResultService @Autowired constructor(
 ) {
     fun getCommonResult(offset: Int, limit: Int): ListResponse<CommonResultRow> {
         val codesMap = competitionItemService.getCodesMap()
-        val page = resultRepository.findAllByNameNotOrderByIdDesc(pageable = getPagination(offset, limit))
+        val page = resultRepository
+            .findAllByNameNotAndCodeNotLikeAndCodeNotLikeOrderByIdDesc(pageable = getPagination(offset, limit))
             .map { resultMapper.fromEntityToCommonModel(it, codesMap[it.code]) }
         return ListResponse(page.toList(), page.totalElements > offset + limit)
     }
