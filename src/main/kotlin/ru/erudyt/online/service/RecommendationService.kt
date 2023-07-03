@@ -11,6 +11,7 @@ import ru.erudyt.online.entity.resource.ResultEntity
 import ru.erudyt.online.mapper.CompetitionItemMapper
 import ru.erudyt.online.repository.resource.CustomCompetitionItemRepository
 import kotlin.math.min
+import ru.erudyt.online.repository.fs.TestRepository
 
 @Service
 class RecommendationService @Autowired constructor(
@@ -20,6 +21,7 @@ class RecommendationService @Autowired constructor(
     private val resultService: CompetitionResultService,
     private val mapper: CompetitionItemMapper,
     private val fileService: FileService,
+    private val testRepository: TestRepository,
 ) {
     fun getRecommendation(): List<CompetitionItemShort> {
         val results = getAnonOrUserResults(15)
@@ -41,7 +43,7 @@ class RecommendationService @Autowired constructor(
             ageIds = ages,
             subjectIds = subjects,
             difficulty = difficulty,
-            notContainCodes = codes,
+            notContainCodes = codes + testRepository.getUnsupportedIds(),
             pageable = getPagination(10),
         )
             .toList()

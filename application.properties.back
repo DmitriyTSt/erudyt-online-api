@@ -7,6 +7,8 @@ erudyt.env=dev
 
 erudyt.baseUrl=https://erudit-online.ru/
 erudyt.tests.directoryPath=E:\\projects\\ERUDYT_ALL\\content\\tests_data
+erudyt.tests.unsupportedDirPath=E:\\projects\\ERUDYT_ALL\\content
+erudyt.tests.unsupportedFileName=unsupportedTestIds.json
 erudyt.taglines.directoryPath=E:\\projects\\ERUDYT_ALL\\content\\taglines
 erudyt.taglines.fileName=taglines.json
 erudyt.config.directoryPath=E:\\projects\\ERUDYT_ALL\\content\\appConfig
